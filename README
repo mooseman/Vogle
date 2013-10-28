@@ -12,7 +12,11 @@ light of experience gained by some of the authors when working on the C-DIGS
 project at the Royal Melbourne Institute of Technology, Australia, with Mike
 Gigante." 
 
- As with D-Flat, the intention is to get this updated so that it runs on Linux. 
+ I have also added the tarzipped files for VOPL.  From its README -  
+"VOPL is a library of routines for doing fits and graph plots written using
+the VOGLE graphics library." 
+
+ As with D-Flat, the intention is to get Vogle updated so that it runs on Linux. 
 
  It is public domain so (as usual) - "share and enjoy....."  ;)  
 
