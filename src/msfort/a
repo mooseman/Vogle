@@ -1,0 +1,464 @@
+Calling vinit
+C-vinit: A Sample String
+
+Calling vexit
+C-vexit
+
+Calling voutput
+C-voutput: A Sample String
+
+Calling vnewdev
+C-vnewdev: A Sample String
+
+Calling vgetdev
+C-vgetdev: A_device
+
+vgetdev returns: A_device                                                      
+                                      
+Calling clear
+C-clear
+
+Calling color(7)
+C-color: 7
+
+Calling mapcolor(1, 2, 3, 4)
+C-mapcolor: 1 2 3 4
+
+Calling clipping(.true.)
+C-clipping: 1
+
+calling getkey()
+C-getkey: returning 11
+
+getkey returns:          11
+calling getdepth()
+C-getdepth: returning 111
+
+getdepth returns:         111
+calling locator()
+C-locator: returning 13 as fn val, x = 23.4, y = 44.2
+
+locator returns:          13       23.400000       44.200000
+calling slocator()
+C-slocator: returning 13 as fn val, x = 23.4, y = 44.2
+
+slocator returns:          13       23.400000       44.200000
+Calling viewport(10.0, 11.0, 12.0, 13.0)
+C-viewport: 10.000000 11.000000 12.000000 13.000000
+
+Calling getviewport(a1, a2, a3, a4)
+C-getviewport: returning 1.0, 2.0, 3.0, 4.0
+
+getviewport returns:        1.000000        2.000000        3.000000
+       4.000000
+Calling pushviewport
+C-pushviewport
+
+Calling popviewport
+C-popviewport
+
+Calling pushattributes
+C-pushattributes
+
+Calling popattributes
+C-popattributes
+
+Calling ortho(20.0, 30.0, 40.0, 50.0, 60.0, 70.0)
+C-ortho: 20.000000 30.000000 40.000000 50.000000 60.000000 70.000000
+
+Calling ortho2(40.0, 50.0, 60.0, 70.0)
+C-ortho2: 40.000000 50.000000 60.000000 70.000000
+
+Calling perspective(140.0, 150.0, 160.0, 170.0)
+C-perspective: 140.000000 150.000000 160.000000 170.000000
+
+Calling window(20.0, 30.0, 40.0, 50.0, 60.0, 70.0)
+C-window: 20.000000 30.000000 40.000000 50.000000 60.000000 70.000000
+
+Calling pushmatrix
+C-pushmatrix
+
+Calling popmatrix
+C-popmatrix
+
+Calling polarview(240.0, 250.0, 260.0, 270.0)
+C-polarview: 240.000000 250.000000 260.000000 270.000000
+
+Calling lookat(20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0)
+C-lookat: 20.000000 30.000000 40.000000 50.000000 60.000000 70.000000 80.000000
+
+Calling move(23.0, 24.0, 25.0)
+C-move: 23.000000 24.000000 25.000000
+
+Calling rmove(230.0, 240.0, 250.0)
+C-rmove: 230.000000 240.000000 250.000000
+
+Calling move2(240.0, 250.0)
+C-move2: 240.000000 250.000000
+
+Calling rmove2(40.0, 50.0)
+C-rmove2: 40.000000 50.000000
+
+Calling smove2(540.0, 550.0)
+C-smove2: 540.000000 550.000000
+
+Calling rsmove2(1540.0, 1550.0)
+C-rsmove2: 1540.000000 1550.000000
+
+Calling draw(23.0, 24.0, 25.0)
+C-draw: 23.000000 24.000000 25.000000
+
+Calling rdraw(230.0, 240.0, 250.0)
+C-rdraw: 230.000000 240.000000 250.000000
+
+Calling draw2(240.0, 250.0)
+C-draw2: 240.000000 250.000000
+
+Calling rdraw2(40.0, 50.0)
+C-rdraw2: 40.000000 50.000000
+
+Calling sdraw2(540.0, 550.0)
+C-sdraw2: 540.000000 550.000000
+
+Calling rsdraw2(1540.0, 1550.0)
+C-rsdraw2: 1540.000000 1550.000000
+
+Calling arcprecision(44)
+C-arcprecision: 44
+
+Calling arc(1.0, 2.0, 3.0, 4.0, 5.0)
+C-arc: 1.000000 2.000000 3.000000 4.000000 5.000000
+
+Calling sector(11.0, 12.0, 13.0, 14.0, 15.0)
+C-sector: 11.000000 12.000000 13.000000 14.000000 15.000000
+
+Calling circle(11.0, 12.0, 13.0)
+C-circle: 11.000000 12.000000 13.000000
+
+Calling curvebasis(a)
+   0.000000E+00        4.000000        8.000000       12.000000
+       1.000000        5.000000        9.000000       13.000000
+       2.000000        6.000000       10.000000       14.000000
+       3.000000        7.000000       11.000000       15.000000
+C-curvebasis:
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+
+Calling curveprecision(45)
+C-curveprecision: 45
+
+Calling rcurve(a)
+   0.000000E+00        4.000000        8.000000       12.000000
+       1.000000        5.000000        9.000000       13.000000
+       2.000000        6.000000       10.000000       14.000000
+       3.000000        7.000000       11.000000       15.000000
+C-rcurve:
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+
+Calling curve(b)
+     100.000000      400.000000      700.000000     1000.000000
+     200.000000      500.000000      800.000000     1100.000000
+     300.000000      600.000000      900.000000     1200.000000
+C-curve:
+100.000000 200.000000 300.000000
+400.000000 500.000000 600.000000
+700.000000 800.000000 900.000000
+1000.000000 1100.000000 1200.000000
+
+
+Calling curven(6, c)
+      50.000000       80.000000      110.000000      140.000000
+     170.000000      200.000000
+      60.000000       90.000000      120.000000      150.000000
+     180.000000      210.000000
+      70.000000      100.000000      130.000000      160.000000
+     190.000000      220.000000
+C-curven: 6
+50.000000 60.000000 70.000000
+80.000000 90.000000 100.000000
+110.000000 120.000000 130.000000
+140.000000 150.000000 160.000000
+170.000000 180.000000 190.000000
+200.000000 210.000000 220.000000
+
+
+Calling rect(10.0, 11.0, 12.0, 13.0)
+C-rect: 10.000000 11.000000 12.000000 13.000000
+
+Calling polyfill(.false.)
+C-polyfill: 0
+
+Calling polyhatch(.true.)
+C-polyhatch: 1
+
+Calling hatchang(45.0)
+C-hatchang: 45.000000
+
+Calling hatchpitch(5.0)
+C-hatchpitch: 5.000000
+
+Calling poly(6, c)
+      50.000000       80.000000      110.000000      140.000000
+     170.000000      200.000000
+      60.000000       90.000000      120.000000      150.000000
+     180.000000      210.000000
+      70.000000      100.000000      130.000000      160.000000
+     190.000000      220.000000
+C-poly: 6
+50.000000 60.000000 70.000000
+80.000000 90.000000 100.000000
+110.000000 120.000000 130.000000
+140.000000 150.000000 160.000000
+170.000000 180.000000 190.000000
+200.000000 210.000000 220.000000
+
+
+Calling poly2(6, d)
+      50.000000       80.000000      110.000000      140.000000
+     170.000000      200.000000
+      60.000000       90.000000      120.000000      150.000000
+     180.000000      210.000000
+C-poly2: 6
+50.000000 60.000000
+70.000000 80.000000
+90.000000 100.000000
+110.000000 120.000000
+130.000000 140.000000
+150.000000 160.000000
+
+
+Calling makepoly()
+C-makepoly
+
+Calling closepoly()
+C-closepoly
+
+Calling font(s)
+C-font: A_device
+
+Calling numchars()
+C-numchars: returning 15
+
+Numchars returns:          15
+Calling textsize(3.0, 4.5)
+C-textsize: 3.000000 4.500000
+
+Calling textang(33.3)
+C-textang: 33.299999
+
+Calling fixedwidth(2)
+C-fixedwidth: 2
+
+Calling centertext(2)
+C-centertext: 2
+
+Calling getcharsize('A', x, y)
+C-getcharsize: A, returning w = 11.3, h = 555.4
+
+x =       11.300000 y =      555.400000
+Calling getfontsize(x, y)
+C-getfontsize: returning w = 11.3, h = 555.4
+
+x =       11.300000 y =      555.400000
+Calling drawchar('K')
+C-drawchar: K
+
+Calling drawstr('Hello')
+C-drawstr: Hello
+
+Calling strlength(s)
+C-strlength: returning (float)strlen(A_device)
+
+strlength returns:        8.000000
+Calling boxtext(1.0, 2.0, 3.0, 4.0, s)
+C-boxtext: 1.000000 2.000000 3.000000 4.000000 A_device
+
+Calling boxfit(22.3, 44.5, 11)
+C-boxfit: 22.299999 44.500000 11
+
+Calling translate(0.5, 0.6, 0.7)
+C-translate: 0.500000 0.600000 0.700000
+
+Calling scale(0.5, 0.6, 0.7)
+C-scale: 0.500000 0.600000 0.700000
+
+Calling rotate(22.4, 'x')
+C-rotate: 22.400000 x
+
+Calling patchbasis(a, a)
+   0.000000E+00        4.000000        8.000000       12.000000
+       1.000000        5.000000        9.000000       13.000000
+       2.000000        6.000000       10.000000       14.000000
+       3.000000        7.000000       11.000000       15.000000
+C-patchbasis:
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+
+calling patchprecision(34, 45)
+C-patchprecision: 34 45
+
+calling patchcurves(134, 415)
+C-patchcurves: 134 415
+
+calling rpatch(a, a, a, a)
+C-rpatch:
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+
+calling patch(a, a, a)
+C-patch:
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+
+calling point(500.0, 600.0, 700.0)
+C-point: 500.000000 600.000000 700.000000
+
+calling point2(500.0, 600.0)
+C-point2: 500.000000 600.000000
+
+Calling makeobj(3)
+C-makeobj: 3
+
+Calling closeobj()
+C-closeobj
+Calling genobj()
+C-genobj: returning 77
+genobj returns:          77
+calling getopenobj()
+C-getopenobj: returning 88
+getopenobj returns:          88
+Calling callobj(23)
+C-callobj: 23
+
+calling isobj(5)
+C-isobj: 5, returning 1
+
+isobj returns: T
+Calling loadobj(8, s)
+C-loadobj: 8 A_device
+
+Calling saveobj(9, s)
+C-saveobj: 9 A_device
+
+Calling getgp(x, y, z)
+C-getgp: returning x = 1.0, y = 2.0, z = 3.0
+
+x =        1.000000 y =        2.000000 z =        3.000000
+Calling getgp2(x, y)
+C-getgp2: returning x = 1.0, y = 2.0
+
+x =        1.000000 y =        2.000000
+Calling sgetgp2(x, y)
+C-sgetgp2: returning x = 1.0, y = 2.0
+
+x =        1.000000 y =        2.000000
+Calling getmatrix(w)
+C-getmatrix:
+
+       1.000000        2.000000        3.000000        4.000000
+       1.000000        2.000000        3.000000        4.000000
+       1.000000        2.000000        3.000000        4.000000
+       1.000000        2.000000        3.000000        4.000000
+Calling multmatrix(a)
+C-multmatrix:
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+
+Calling loadmatrix(a)
+C-loadmatrix:
+0.000000 1.000000 2.000000 3.000000
+4.000000 5.000000 6.000000 7.000000
+8.000000 9.000000 10.000000 11.000000
+12.000000 13.000000 14.000000 15.000000
+
+
+Calling getstring(3, s)
+C-getstring: bcol = 3 setting s to 'Hello there - bonk'
+
+getstring(3, s) returns:          18Hello there - bonk                         
+                                                         
+Calling getaspect()
+C-getaspct: returning 0.75
+
+getaspect returns:    7.500000E-01
+Calling getfactors(x, y)
+C-getfactors: returning 1.2, 1.3
+
+getfactors returns:        1.200000        1.300000
+Calling getdisplaysize(x, y)
+C-getdisplaysize: returning 1024, 768
+
+getdisplaysize returns:     1024.000000      768.000000
+C-backbuffer: returning 110
+
+Calling backbuffer:         110
+Calling frontbuffer
+C-frontbuffer:
+
+Calling swapbuffers
+C-swapbuffers:
+
+Calling up(1.3, 2.3, 3.3)
+C-up: 1.300000, 2.300000, 3.300000
+
+Calling prefsize(200, 200)
+C-prefsize: 200, 200
+
+Calling prefposition(20, 30)
+C-prefposition: 20, 30
+
+Calling backface(.true.)
+C-backface: 1
+
+Calling backfacedir(1)
+C-backfacedir: 1
+

@@ -1,0 +1,1848 @@
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+NAME
+     VOGLE - A very ordinary graphics learning environment.
+
+
+DESCRIPTION
+     VOGLE is a library of C routines for doing line drawings and
+     polygon  fills  in  2  and 3 Dimensions. It handles circles,
+     curves, arcs, patches, polygons, and software text in a dev-
+     ice  independent fashion. Simple hidden line removal is also
+     available via polygon backfacing. Access  to  hardware  text
+     and  double  buffering  of  drawings  depends on the driver.
+     There is also a FORTRAN interface but as it goes through the
+     C  routines FORTRAN users are warned that arrays are in row-
+     column order in C.  The following is a brief summary of  the
+     VOGLE subroutines.
+
+  Device routines.
+     vinit(device)
+          Initialise the device.
+
+               Fortran:
+                    subroutine vinit(device)
+                    character *(*) device
+
+               C:
+                    vinit(device);
+                    char     *device;
+
+               Note 1 :- Current available devices are:
+                        tek - tektronix 4010 and compatibles
+                        hpgl - HP Graphics language and compatibles
+                        postscript - postscript devices
+                        sun - Sun workstations
+                        X11 - Generic X windows
+                        decX11 - the decstation window manager
+                        apollo - Apollo workstations
+                        hercules - IBM PC hercules graphics card
+                        cga - IBM PC cga graphics card
+                        ega - IBM PC ega graphics card
+                        vga - IBM PC vga graphics card
+                        sigma - IBM PC sigma graphics card.
+
+                        Sun, X11, decX11, apollo, hercules, cga
+                        and ega support double buffering.
+
+
+               Note 2 :- If device is a NULL or a null string the value
+                    of the environment variable "VDEVICE" is taken as the
+                    device type to be opened.
+
+               Note 3 :- after init it is wise to explicitly
+                    clear the screen.
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                    1
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+               e.g.:
+                    color(BLACK);
+                    clear();
+               or
+                    call color(BLACK)
+                    call clear
+
+
+     vexit()
+          Reset the window/terminal (must be the last VOGLE  rou-
+          tine called)
+
+               Fortran:
+                    subroutine vexit
+
+               C:
+                    vexit()
+
+
+     voutput(path)
+          Redirect output from *next*  vinit  to  file  given  by
+          path. This routine only applies to devices drivers that
+          write to stdout e.g. postscript and hpgl.
+
+               Fortran:
+                    subroutine voutput(path)
+                    character*(*) path
+
+               C:
+                    voutput(path)
+                         char *path;
+
+
+     vnewdev(device)
+          Reinitialize VOGLE to use a new device without changing
+          attributes,  viewport  etc.   (eg.  window and viewport
+          specifications)
+
+               Fortran:
+                    subroutine vnewdev(device)
+                    character *(*) device
+
+               C:
+                    vnewdev(device)
+                         char *device;
+
+
+     vgetdev(device)
+          Gets the name of the current VOGLE device. The  C  ver-
+          sion  of  the  routine  also  returns a pointer to it's
+          argument.
+
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                    2
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+               Fortran:
+                    subroutine vgetdev(device)
+                    character *(*) device
+
+               C:
+                    char *
+                    vgetdev(device)
+                         char *device;
+
+
+     getdepth()
+          Returns the number of bit planes (or color planes)  for
+          a  particular  device. The number of colors displayable
+          by the device is then 2**(nplanes-1)
+
+               Fortran:
+                    integer function  getdepth()
+
+               C:
+                    int
+                    getdepth()
+
+
+  Routines For Setting Up Windows.
+     These can make your code very device independant. Both  rou-
+     tines  take  arguments  which are in device space. (0, 0) is
+     the top left hand corner in device space. To have any effect
+     these routines must be called before vinit.
+
+     prefposition(x, y)
+          Specify the preferred position of the window opened  by
+          the *next* vinit.
+
+               Fortran:
+                    subroutine prefposition(x, y)
+                    integer x, y
+
+               C:
+                    prefposition(x, y)
+                         int  x, y;
+
+
+     prefsize(width, height)
+          Specify the preferred width and height  of  the  window
+          opened by the *next* vinit.
+
+               Fortran:
+                    subroutine prefsize(width, height)
+                    integer width, height
+
+               C:
+                    prefsize(width, height)
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                    3
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                         int  width, height;
+
+
+  General Routines.
+     clear()
+          Clears the screen to the current colour.
+
+               Fortran:
+                    subroutine clear
+
+               C:
+                    clear()
+
+
+     color(col)
+          Set the current colour. The  standard  colours  are  as
+          follows:
+               black = 0       red = 1         green = 2       yellow = 3
+               blue = 4        magenta = 5     cyan = 6        white = 7.
+
+               Fortran:
+                    subroutine color(col)
+                    integer col
+               C:
+                    color(col)
+                         int  col;
+
+
+     mapcolor(indx, red, green, blue)
+          Set the color map index indx to the  color  represented
+          by  (red, green, blue).  If the device has no color map
+          this call does nothing.
+
+               Fortran:
+                    subroutine mapcolor(indx, red, green, blue)
+                    integer indx, red, green, blue
+               C:
+                    mapcolor(indx, red, green, blue)
+                         int  indx, red, green, blue;
+
+
+     clipping(onoff)
+          Turn clipping on or off.  Non-zero  is  considered  on.
+          Note: on some devices turning clipping off may not be a
+          good idea.
+
+               Fortran:
+                    subroutine clipping(onoff)
+                    logical onoff
+               C:
+                    clipping(onoff)
+                         int  onoff;
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                    4
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+     getkey()
+          Return the ascii ordinal of the next key typed  at  the
+          keyboard.  If the device has no keyboard getkey returns
+          -1.
+
+               Fortran:
+                    integer function getkey
+               C:
+                    int
+                    getkey()
+
+
+     checkkey()
+          Returns zero if no key is pressed or the ascii  ordinal
+          of the key that was pressed.
+
+               Fortran:
+                    integer function checkkey()
+               C:
+                    int
+                    checkey()
+
+
+     getstring(bcol, string)
+          Read in a string, echoing it in the current font, using
+          the  current color and the current transformation. bcol
+          is the background color which is used for erasing char-
+          acters  after  a backspace or a delete key is received.
+          Getstring interprets the Backspace key  (ascii  8)  and
+          the  Del  key (ascii 127) as erasing characters. An EOT
+          (ascii 4) or a Carraige return  (ascii  13)  will  ter-
+          minate  input.  Getstring returns the number of charac-
+          ters read. Getstring does not check for overflow in the
+          input buffer string
+
+               Fortran:
+                    integer function getstring(bcol, string)
+                    integer bcol
+                    character *(*) string
+               C:
+                    int
+                    getstring(bcol, string)
+                         int  bcol;
+                         char *string;
+
+
+     locator(xaddr, yaddr)
+          Find out where the cursor is. xaddr and yaddr  are  set
+          to the current location in world coordinates. The func-
+          tion returns a bit pattern which indicates  which  but-
+          tons  are  being held down eg. if mouse buttons 1 and 3
+          are down locator returns binary 101  (decimal  7).  The
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                    5
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+          function  returns -1 if the device has no locator capa-
+          bility. Note: if you have  been  doing  a  lot  of  3-D
+          transformations  xaddr  and yaddr may not make a lot of
+          sense. In this case use slocator.
+
+               Fortran:
+                    integer function locator(xaddr, yaddr)
+                    real xaddr, yaddr
+               C:
+                    int
+                    locator(xaddr, yaddr)
+                         float     *xaddr, *yaddr;
+
+
+     slocator(xaddr, yaddr)
+          Find out where the cursor is. xaddr and yaddr  are  set
+          to  the  current  location  in  screen coordinates. The
+          return value of the function is set up in the same  way
+          as  with  locator.  If the device has no locator device
+          slocator returns -1.
+
+               Fortran:
+                    integer function slocator(xaddr, yaddr)
+                    real xaddr, yaddr
+               C:
+                    int
+                    slocator(xaddr, yaddr)
+                         float     *xaddr, *yaddr;
+
+
+  Viewport Routines.
+     viewport(left, right, bottom, top)
+          Specify which part of the  screen  to  draw  in.  Left,
+          right,  bottom, and top are real values in screen coor-
+          dinates (-1.0 to 1.0).
+
+               Fortran:
+                    subroutine viewport(left, right, bottom, top)
+                    real left, right, bottom, top
+
+               C:
+                    viewport(left, right, bottom, top)
+                         float      left, right, bottom, top;
+
+
+     pushviewport()
+          Save current viewport.
+
+               Fortran:
+                    subroutine pushviewport
+
+               C:
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                    6
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                    pushviewport()
+
+
+     popviewport()
+          Retrieve last viewport.
+
+               Fortran:
+                    subroutine popviewport
+
+               C:
+                    popviewport()
+
+
+     getviewport(left, right, bottom, top)
+          Returns the left, right, bottom and top limits  of  the
+          current viewport in screen coordinates (-1.0 to 1.0).
+
+               Fortran:
+                    subroutine getviewport(left, right, bottom, top)
+                    real left, right, bottom, top
+
+               C:
+                    getviewport(left, right, bottom, top)
+                         float      *left, *right, *bottom, *top;
+
+
+  Getting the aspect details
+     Often the screen is not perfectly square  and  it  would  be
+     nice  to use the extra space without having to turn clipping
+     off. The following routines are provided to get  the  values
+     needed to adjust the calls to viewport, etc as needed.
+
+     getaspect()
+          Returns the ratio height over width of the display dev-
+          ice.
+
+               Fortran:
+                    real function getaspect()
+
+               C:
+                    float
+                    getaspect()
+
+
+     getfactors(wfact, hfact)
+          Returns wfact as the width over  min(width  of  device,
+          height   of  device)  and  hfact  as  the  height  over
+          min(width of device, height of device).
+
+               Fortran:
+                    subroutine getfactors(w, h)
+                    real w, h
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                    7
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+               C:
+                    getfactors(w, h)
+                         float     *w, *h;
+
+
+     getdisplaysize(w, h)
+          Returns the width and height of the device in pixels in
+          w and h respectively.
+
+               Fortran:
+                    subroutine getdisplaysize(w, h)
+                    real w, h
+
+               C:
+                    getdisplaysize(w, h)
+                         float     *w, *h;
+
+
+  Attribute Stack Routines.
+     The attribute stack contains details such as current  color,
+     filling,  hatching,  centered, fixedwidth, text height, text
+     width, and the current font. If you need to  prevent  object
+     calls  form  changing  these,  use pushattributes before the
+     call and popattributes after.
+
+     pushattributes()
+          Save the current attributes on the attribute stack.
+
+               Fortran:
+                    subroutine pushattributes
+
+               C:
+                    pushattributes()
+
+
+     popattributes()
+          Restore the attributes to what they were  at  the  last
+          pushattribute().
+
+               Fortran:
+                    subroutine popattributes
+
+               C:
+                    popattributes()
+
+
+  Projection Routines.
+     All the projection  routines  define  a  new  transformation
+     matrix,  and  consequently the world units. Parallel projec-
+     tions are defined by ortho or  ortho2.  Perspective  projec-
+     tions can be defined by perspective and window.
+
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                    8
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+     ortho(left, right, bottom, top, near, far)
+          Define x (left, right), y (bottom, top), and  z  (near,
+          far)  clipping planes. The near and far clipping planes
+          are actually specified as distances along the  line  of
+          sight.  These  distances  can  also  be  negative.  The
+          actual location of the clipping planes is z  =  -near_d
+          and z = -far_d.
+
+               Fortran:
+                    subroutine ortho(left, right, bottom, top, near_d, far_d)
+                    real left, right, bottom, top, near_d, far_d
+
+               C:
+                    ortho(left, right, bottom, top, near_d, far_d)
+                         float     left, right, bottom, top, near_d, far_d;
+
+
+     ortho2(left, right, bottom, top)
+          Define x (left, right), and y  (bottom,  top)  clipping
+          planes.
+
+               Fortran:
+                    subroutine ortho2(left, right, bottom, top)
+                    real left, right, bottom, top
+
+               C:
+                    ortho2(left, right, bottom, top)
+                         float     left, right, bottom, top;
+
+
+     perspective(fov, aspect, near, far)
+          Specify a perspective viewing pyramid in world  coordi-
+          nates  by  giving a field of view, aspect ratio and the
+          distance from the eye of  the  near  and  far  clipping
+          plane.
+
+               Fortran:
+                    subroutine perspective(fov, aspect, near, far)
+                    real fov, aspect, near, far
+
+               C:
+                    perspective(fov, aspect, near, far)
+                         float     fov, aspect, near, far;
+
+
+     window(left, right, bot, top, near, far)
+          Specify a perspective viewing pyramid in world coordinates by
+          give the rectangle closest to the eye (ie. at the near clipping
+          plane) and the distances to the near and far clipping planes.
+
+               Fortran:
+                    subroutine window(left, right, bot, top, near, far)
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                    9
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                    real left, right, bot, top, near, far
+
+               C:
+                    window(left, right, bot, top, near, far)
+                         float     left, right, bot, top, near, far;
+
+
+
+  Matrix Stack Routines.
+     pushmatrix()
+          Save the current transformation matrix  on  the  matrix
+          stack.
+
+               Fortran:
+                    subroutine pushmatrix
+
+               C:
+                    pushmatrix()
+
+
+     popmatrix()
+          Retrieve the last matrix pushed and make it the current
+          transformation matrix.
+
+               Fortran:
+                    subroutine popmatrix
+
+               C:
+                    popmatrix()
+
+
+  Viewpoint Routines.
+     Viewpoint routines alter the current tranformation matrix.
+
+     polarview(dist, azim, inc, twist)
+          Specify the viewer's position in polar  coordinates  by
+          giving  the  distance  from  the viewpoint to the world
+          origin, the azimuthal angle in the x-y plane,  measured
+          from  the y-axis, the incidence angle in the y-z plane,
+          measured from the z-axis, and the twist angle about the
+          line of sight.
+
+               Fortran:
+                    subroutine polarview(dist, azim, inc, twist)
+                    real dist, azim, inc, twist
+
+               C:
+                    polarview(dist, azim, inc, twist)
+                         float     dist, azim, inc, twist;
+
+
+     up(x, y, z)
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   10
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+          Specify the world up.  This  can  be  used  to  prevent
+          lookat's sometimes annoying habit of turning everything
+          upside down due to  the  line  of  sight  crossing  the
+          appropriate axis.
+
+               Fortran:
+                    subroutine up(x, y, z)
+                    real x, y, z
+
+               C:
+                    up(x, y, z)
+                         float     x, y, z;
+
+
+     lookat(vx, vy, vz, px, py, pz, twist)
+          Specify the viewer's position by giving a viewpoint and
+          a  reference  point in world coordinates. A twist about
+          the line of sight may also be given.
+
+               Fortran:
+                    subroutine lookat(vx, vy, vz, px, py, pz, twist)
+                    real vx, vy, vz, px, py, pz, twist
+
+               C:
+                    lookat(vx, vy, vz, px, py, pz, twist)
+                         float     vx, vy, vz, px, py, pz, twist;
+
+
+  Move Routines.
+     move(x, y, z)
+          Move current graphics position to (x, y, z). (x, y,  z)
+          is a point in world coordinates.
+
+               Fortran:
+                    subroutine move(x, y, z)
+                    real x, y, z
+
+               C:
+                    move(x, y, z)
+                         float     x, y, z;
+
+
+     rmove(deltax, deltay, deltaz)
+          Relative move. deltax, deltay, and deltaz  are  offsets
+          in world units.
+
+               Fortran:
+                    subroutine rmove(deltax, deltay, deltaz)
+                    real deltax, deltay, deltaz
+
+               C:
+                    rmove(deltax,deltay)
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   11
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                         float   deltax, deltay, deltaz;
+
+
+     move2(x, y)
+          Move graphics position to point (x, y).  (x,  y)  is  a
+          point in world coordinates.
+
+               Fortran:
+                    subroutine move2(x, y)
+                    real x, y
+
+               C:
+                    move2(x, y)
+                         float     x, y;
+
+
+     rmove2(deltax, deltay)
+          Relative move2. deltax and deltay are offsets in  world
+          units.
+
+               Fortran:
+                    subroutine rmove2(deltax, deltay)
+                    real deltax, deltay
+
+               C:
+                    rmove2(deltax, deltay)
+                         float     deltax, deltay;
+
+
+     smove2(x, y)
+          Move current graphics position  in  screen  coordinates
+          (-1.0 to 1.0).
+
+               Fortran:
+                    subroutine smove2(x, y)
+                    real x, y
+
+               C:
+                    smove2(x, y)
+                         float     x, y;
+
+
+     rsmove2(deltax, deltay)
+          Relative smove2. deltax,  and  deltay  are  offsets  in
+          screen units (-1.0 to 1.0).
+
+               Fortran:
+                    subroutine rsmove2(deltax, deltay)
+                    real deltax, deltay
+
+               C:
+                    rsmove2(deltax, deltay)
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   12
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                         float     deltax, deltay;
+
+
+  Drawing Routines.
+     draw(x, y, z)
+          Draw from current graphics position to (x, y,  z).  (x,
+          y, z) is a point in world coordinates.
+
+               Fortran:
+                    subroutine draw(x, y, z)
+                    real x, y, z
+
+               C:
+                    draw(x, y, z)
+                         float     x, y, z;
+
+
+     rdraw(deltax, deltay, deltaz)
+          Relative draw. deltax, deltay, and deltaz  are  offsets
+          in world units.
+
+               Fortran:
+                    subroutine rdraw(deltax, deltay, deltaz)
+                    real deltax, deltay, deltaz
+
+               C:
+                    rdraw(deltax, deltay, deltaz)
+                         float   deltax, deltay, deltaz;
+
+
+     draw2(x, y)
+          Draw from current graphics position to  point  (x,  y).
+          (x, y) is a point in world coordinates.
+
+               Fortran:
+                    subroutine draw2(x, y)
+                    real x, y
+
+               C:
+                    draw2(x, y)
+                         float     x, y;
+
+
+     rdraw2(deltax,deltay)
+          Relative draw2. deltax and deltay are offsets in  world
+          units.
+
+               Fortran:
+                    subroutine rdraw2(deltax, deltay)
+                    real deltax, deltay
+
+               C:
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   13
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                    rdraw2(deltax, deltay)
+                         float   deltax, deltay;
+
+
+     sdraw2(x, y)
+          Draw in screen coordinates (-1.0 to 1.0).
+
+               Fortran:
+                    subroutine sdraw2(x, y)
+                    real x, y
+
+               C:
+                    sdraw2(x, y)
+                         float     x, y;
+
+
+     rsdraw2(deltax, deltay)
+          Relative sdraw2. delatx and deltay are in screen  units
+          (-1.0 to 1.0).
+
+               Fortran:
+                    subroutine rsdraw2(deltax, deltay)
+                    real deltax, deltay
+               C:
+                    rsdraw2(deltax, deltay)
+                         float     deltax, deltay;
+
+
+  Arcs and Circles.
+     circleprecision(nsegs)
+          Set the number of line segments  making  up  a  circle.
+          Default  is  currently 32. The number of segments in an
+          arc or sector is calculated from  nsegs  according  the
+          span  of  the arc or sector.  This replaces the routine
+          arcprecision.
+               Fortran:
+                    subroutine circleprecision(nsegs)
+                    integer   nsegs
+               C:
+                    circleprecision(nsegs)
+                         int  nsegs;
+
+
+     arc(x, y, radius, startang, endang)
+          Draw an arc. x, y,  and  radius  are  values  in  world
+          units.
+
+               Fortran:
+                    subroutine arc(x, y, radius, startang, endang)
+                    real x, y, radius;
+                    real startang, endang;
+               C:
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   14
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                    arc(x, y, radius, startang, endang)
+                         float  x, y, radius;
+                         float  startang, endang;
+
+
+     sector(x, y, radius, startang, endang)
+          Draw a sector. x, y, and radius  are  values  in  world
+          units.  Note:  sectors  are regarded as polygons, so if
+          polyfill or polyhatch has been called with 1, the  sec-
+          tors will be filled or hatched accordingly.
+
+               Fortran:
+                    subroutine sector(x, y, radius, startang, endang)
+                    real x, y, radius;
+                    real startang, endang;
+               C:
+                    sector(x, y, radius, startang, endang)
+                         float  x, y, radius;
+                         float  startang, endang;
+
+
+     circle(x, y, radius)
+          Draw a circle. x, y, and radius  are  values  in  world
+          units.  Note:  circles  are regarded as polygons, so if
+          polyfill or polyhatch has been called with 1, the  cir-
+          cle will be filled or hatched accordingly.
+               x and y real coordinates in user units.
+
+               Fortran:
+                    subroutine circle(x, y, radius)
+                    real x, y, radius
+               C:
+                    circle(x, y, radius)
+                         float     x, y, radius;
+
+
+  Curve Routines.
+     curvebasis(basis)
+          Define a basis matrix for a curve.
+
+               Fortran:
+                    subroutine curvebasis(basis)
+                    real basis(4,4)
+               C:
+                    curvebasis(basis)
+                         float     basis[4][4];
+
+
+     curveprecision(nsegs)
+          Define the number of  line  segments  used  to  draw  a
+          curve.
+
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   15
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+               Fortran:
+                    subroutine curveprecision(nsegs)
+                    integer nsegs
+               C:
+                    curveprecision(nsegs)
+                         int  nsegs;
+
+
+     rcurve(geom)
+          Draw a rational curve.
+
+               Fortran:
+                    subroutine rcurve(geom)
+                    real geom(4,4)
+               C:
+                    rcurve(geom)
+                         float     geom[4][4];
+
+
+     curve(geom)
+          Draw a curve.
+
+               Fortran:
+                    subroutine curve(geom)
+                    real geom(3,4)
+               C:
+                    curve(geom)
+                         float     geom[4][3];
+
+
+     curven(n, geom)
+          Draw n - 3 overlapping curve segments. Note: n must  be
+          at least 4.
+
+               Fortran:
+                    subroutine curven(n, geom)
+                    integer n
+                    real geom(3,n)
+               C:
+                    curven(n, geom)
+                         int  n;
+                         float     geom[][3];
+
+
+  Rectangles and General Polygon Routines.
+     rect(x1, y1, x2, y2)
+          Draw a rectangle.
+
+               Fortran:
+                    subroutine rect(x1, y1, x2, y2)
+                    real x1, y1, x1, y2
+               C:
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   16
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                    rect(x1, y1, x2, y2)
+                         float     x1, y1, x2, y2;
+
+
+     polyfill(onoff)
+          Set the polygon fill flag. This will  always  turn  off
+          hatching. A non-zero
+           (.true. ) turns polyfill on.
+
+               Fortran:
+                    subroutine polyfill(onoff)
+                    logical onoff
+               C:
+                    polyfill(onoff)
+                         int  onoff;
+
+
+     polyhatch(onoff)
+          Set the polygon hatch flag. This will always  turn  off
+          fill. A non-zero
+           (.true.) turns polyhatch on.
+
+               Fortran:
+                    subroutine polyhatch(onoff)
+                    logical   onoff
+               C:
+                    polyhatch(onoff)
+                         int  onoff;
+
+
+     hatchang(angle)
+          Set the angle of the hatch lines.
+
+               Fortran:
+                    subroutine hatchang(angle)
+                    real angle
+               C:
+                    hatchang(angle)
+                         float     angle;
+
+
+     hatchpitch(pitch)
+          Set the distance between hatch lines.
+
+               Fortran:
+                    subroutine hatchpitch(pitch)
+                    real pitch
+               C:
+                    hatchpitch(pitch)
+                         float     pitch;
+
+
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   17
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+     poly2(n, points)
+          Construct an (x, y) polygon from  an  array  of  points
+          provided by the user.
+
+               Fortran:
+                    subroutine poly2(n, points)
+                    integer   n
+                    real points(2, n)
+               C:
+                    poly2(n,  points)
+                         int  n;
+                         float     points[][2];
+
+
+     poly(n, points)
+          Construct a polygon from an array of points provided by
+          the user.
+
+               Fortran:
+                    subroutine poly(n, points)
+                    integer   n
+                    real points(3, n)
+               C:
+                    poly(n,  points)
+                         int  n;
+                         float     points[][3];
+
+
+     makepoly()
+          makepoly opens up a polygon which  will  then  be  con-
+          structed  by  a  series  of  move-draws and closed by a
+          closepoly.
+
+               Fortran:
+                    subroutine makepoly
+               C:
+                    makepoly()
+
+
+     closepoly()
+          Terminates a polygon opened by makepoly.
+
+               Fortran:
+                    subroutine closepoly
+               C:
+                    closepoly()
+
+
+     backface(onoff)
+          Turns on culling of backfacing polygons. A  polygon  is
+          backfacing  if  it's  orientation in *screen* coords is
+          clockwise, unless a call to backfacedir is made.
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   18
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+               Fortran:
+                    subroutine backface(onoff)
+                    integer onoff
+
+               C:
+                    backface(onoff)
+                         int  onoff;
+
+
+     backfacedir(clockwise)
+          Sets the backfacing direction  to  clockwise  or  anti-
+          clockwise depending on whether clockwise is 1 or 0.
+
+               Fortran:
+                    subroutine backfacedir(clockwise)
+                    integer clockwise
+
+               C:
+                    backfacedir(clockwise)
+                         int  clockwise;
+
+
+  Text Routines.
+     VOGLE supports hardware and  software  fonts.  The  software
+     fonts  are  based on the character set digitized by Dr Allen
+     V. Hershey while working at the U.  S.  National  Bureau  of
+     Standards. Exactly what hardware fonts are supported depends
+     on the device, but it is guaranteed that the  names  "large"
+     and  "small"  will result in something readable. It is noted
+     here that text is always assumed to be drawn parallel to the
+     (x,  y)  plane,  using whatever the current z coordinate is.
+     The following software fonts are supported:
+          astrology       cursive         cyrillic        futura.l
+          futura.m        gothic.eng      gothic.ger      gothic.ita
+          greek           markers         math.low        math.upp
+          meteorology     music           script          symbolic
+          times.g         times.i         times.ib        times.r
+          times.rb        japanese
+     A markers font "markers" is also provided for doing  markers
+     -  you  need to have centertext on for this to give sensible
+     results - with the markers starting at 'A' and 'a'.
+
+     If the environment variable "VFONTLIB" is  set  VOGLE  looks
+     for the software fonts in the directory given by this value.
+
+     font(fontname)
+          Set the current font
+
+               Fortran:
+                    subroutine font(fontname)
+                    character*(*) fontname
+               C:
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   19
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                    font(fontname)
+                         char *fontname
+
+
+     numchars()
+          Return the number of characters in  the  current  font.
+          Applicable only to software fonts.
+
+               Fortran:
+                    integer function numchars
+               C:
+                    int
+                    numchars()
+
+
+     textsize(width, height)
+          Set the maximum size of  a  character  in  the  current
+          font.  Width and height are values in world units. This
+          only applies to software text. This must be done  after
+          the font being scaled is loaded.
+
+               Fortran:
+                    subroutine textsize(width, height)
+                    real width, height
+               C:
+                    textsize(width, height)
+                         float     width, height;
+
+
+     textang(ang)
+          Set the text angle. This angles strings and chars. This
+          routine only affects software text.
+
+               Fortran:
+                    subroutine textang(ang)
+                    real ang
+               C:
+                    textang(ang)
+                         float     ang;
+
+
+     fixedwidth(onoff)
+          Turns fixedwidth text on or off. Non-zero  (.true.)  is
+          on. Causes all text to be printed fixedwidth. This rou-
+          tine only affects software text.
+
+               Fortran:
+                    subroutine fixedwidth(onoff)
+                    logical onoff
+               C:
+                    fixedwidth(onoff)
+                         int onoff;
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   20
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+     centertext(onoff)
+          Turns centertext text on or off. Non-zero  (.true.)  is
+          on.  This  centres strings and chars. This routine only
+          affects software text.
+
+               Fortran:
+                    subroutine centertext(onoff)
+                    logical onoff
+               C:
+                    centertext(onoff)
+                         int onoff;
+
+
+     getcharsize(c, width, height)
+          Get the width and height of a character. At the  moment
+          the  height  returned  is always that of the difference
+          between the maximum descender and ascender.
+
+               Fortran:
+                    subroutine getcharsize(c, width, height)
+                    character*1 c
+                    real width, height
+               C:
+                    getcharsize(c, width, height)
+                         char c;
+                         float     *width, *height;
+
+
+     getfontsize(width, height)
+          Get the maximum width and height of a  character  in  a
+          font.
+
+               Fortran:
+                    subroutine getfontsize(width, height)
+                    real width, height
+               C:
+                    getfontsize(width, height)
+                         float     *width, *height;
+
+
+     drawchar(c)
+          Draw the character c.  The  current  graphics  position
+          represents the bottom left hand corner of the character
+          space.
+
+               Fortran:
+                    subroutine drawchar(c)
+                    character c
+               C:
+                    drawchar(str)
+                         char c;
+
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   21
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+     drawstr(str)
+          Draw the text in string at the current position.
+
+               Fortran:
+                    subroutine drawstr(str)
+                    character*(*) str
+               C:
+                    drawstr(str)
+                         char *str;
+
+
+     strlength(str)
+          Return the length of the string s in world units.
+
+               Fortran:
+                    real function strlength(str)
+                    character*(*) str
+               C:
+                    float
+                    strlength(str)
+                         char *str;
+
+
+     boxtext(x, y, l, h, s)
+          Draw the string s so that it fits in the imaginary  box
+          defined  with bottom left hand corner at (x, y), length
+          l, and hieght h. This only applies to software text.
+
+               Fortran:
+                    subroutine boxtext(x, y, l, h, s)
+                    real x, y, l, h, s
+               C:
+                    boxtext(x, y, l, h, s)
+                         float     x, y, l, h, s;
+
+
+     boxfit(l, h, nchars)
+          Set scale for text so that  a  string  of  the  biggest
+          characters  in the font will fit in a box l by h. l and
+          h are real  values  in  world  dimensions.   This  only
+          applies to software text.
+
+               Fortran:
+                    subroutine boxfit(l, h, nchars)
+                    real l, h
+                    integer nchars
+               C:
+                    boxfit(l, h, nchars)
+                         float     l, h
+                         int  nchars
+
+
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   22
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+  Transformations Routines.
+     All transformations are cumulative, so if you  rotate  some-
+     thing  and  then do a translate you are translating relative
+     to the rotated axes. If you need  to  preserve  the  current
+     transformation  matrix use pushmatrix(), do the drawing, and
+     then call popmatrix() to get back where you were before.
+
+     translate(x, y, z)
+          Set up a translation.
+
+               Fortran:
+                    subroutine translate(x, y, z)
+                    real x, y, z
+               C:
+                    translate(x, y, z)
+                         float     x, y, z;
+
+
+     scale(x, y, z)
+          Set up scaling factors in x, y, and z axis.
+
+               Fortran:
+                    subroutine scale(x, y, z)
+                    real x, y, z
+               C:
+                    scale(x, y, z)
+                         float     x, y, z;
+
+
+     rotate(angle, axis)
+          Set up a rotation in axis axis. Where axis  is  one  of
+          'x', 'y', or 'z'.
+
+               Fortran:
+                    subroutine rotate(angle, axis)
+                    real angle
+                    character axis
+               C:
+                    rotate(angle, axis)
+                         float     angle;
+                         char axis;
+
+
+  Patch Routines.
+     patchbasis(tbasis, ubasis)
+          Define the t and u basis matrices of a patch.
+
+               Fortran:
+                    subroutine patchbasis(tbasis, ubasis)
+                    real tbasis(4, 4), ubasis(4, 4)
+               C:
+                    patchbasis(tbasis, ubasis)
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   23
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                         float     tbasis[4][4], ubasis[4][4];
+
+
+     patchprecision(tseg, useg)
+          Set the minimum  number  of  line  segments  making  up
+          curves in a patch.
+
+               Fortran:
+                    subroutine patchprecision(tseg, useg)
+                    integer tseg, useg
+               C:
+                    patchprecision(tseg, useg)
+                         int     tseg, useg;
+
+
+     patchcurves(nt, nu)
+          Set the number of curves making up a patch.
+
+               Fortran:
+                    subroutine patchcurves(nt, nu)
+                    integer nt, nu
+               C:
+                    patchcurves(nt, nu)
+                         int     nt, nu;
+
+
+     rpatch(gx, gy, gz, gw)
+          Draws a rational patch in the current basis,  according
+          to the geometry matrices gx, gy, gz, and gw.
+
+               Fortran:
+                    subroutine rpatch(gx, gy, gz, gw)
+                    real  gx(4,4), gy(4,4), gz(4,4), gw(4,4)
+               C:
+                    rpatch(gx, gy, gz, gw)
+                        float  gx[4][4], gy[4][4], gz[4][4], gw[4][4];
+
+
+     patch(gx, gy, gz)
+          Draws a patch in the current basis,  according  to  the
+          geometry matrices gx, gy, and gz.
+
+               Fortran:
+                    subroutine patch(gx, gy, gz)
+                    real  gx(4,4), gy(4,4), gz(4,4)
+               C:
+                    patch(gx, gy, gz)
+                         float  gx[4][4], gy[4][4], gz[4][4];
+
+
+  Point Routines.
+     point(x, y, z)
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   24
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+          Draw a point at x, y, z
+
+               Fortran:
+                    subroutine point(x, y, z)
+                    real x, y, z
+               C:
+                    point(x, y, z)
+                         real x, y, z;
+
+
+     point2(x, y)
+          Draw a point at x, y.
+
+               Fortran:
+                    subroutine point2(x, y)
+                    real x, y
+               C:
+                    point2(x, y)
+                         float     x, y;
+
+
+  Object Routines.
+     Objects are graphical entities created by the  drawing  rou-
+     tines  called  between  makeobj and closeobj. Objects may be
+     called from within other objects. When an object is  created
+     most  of  the  calculations required by the drawing routines
+     called within it are  done  up  to  where  the  calculations
+     involve the current transformation matrix. So if you need to
+     draw the same thing several times on the screen but in  dif-
+     ferent  places  it is faster to use objects than to call the
+     appropriate drawing routines each time.  Objects  also  have
+     the  advantage  of being saveable to a file, from where they
+     can be reloaded for later reuse. Routines which draw or move
+     in  screen coordinates, or change device, cannot be included
+     in objects.
+
+     makeobj(n)
+          Commence the object number n.
+
+               Fortran:
+                    subroutine makeobj(n)
+                    integer n
+               C:
+                    makeobj(n)
+                         int  n;
+
+
+     closeobj()
+          Close the current object.
+
+               Fortran:
+                    subroutine closeobj()
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   25
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+               C:
+                    closeobj()
+
+
+     genobj()
+          Returns a unique object identifier.
+
+               Fortran:
+                    integer function genobj()
+               C:
+                    int
+                    genobj()
+
+
+     getopenobj()
+          Return the number of the current object.
+
+               Fortran:
+                    integer function getopenobj()
+               C:
+                    int
+                    getopenobj()
+
+
+     callobj(n)
+          Draw object number n.
+
+               Fortran:
+                    subroutine callobj(n)
+                    integer n
+               C:
+                    callobj(n)
+                         int  n;
+
+
+     isobj(n)
+          Returns non-zero if there is an object of number n.
+
+               Fortran:
+                    logical function isobj(n)
+                    integer n
+               C:
+                    int
+                    isobj(n)
+                         int  n;
+
+
+     loadobj(n, filename)
+          Load the object in the file filename a object number n.
+
+               Fortran:
+                    loadobj(n, filename)
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   26
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+                    integer n
+                    character*(*) filename
+               C:
+                    loadobj(n, filename)
+                         int     n;
+                         char    *filename;
+
+
+     saveobj(n, filename)
+          Save the object number n into the file  filename.  This
+          call does not save objects called inside object n.
+
+               Fortran:
+                    saveobj(n, filename)
+                    integer   n
+                    character*(*) filename
+               C:
+                    saveobj(n, filename)
+                         int  n;
+                         char *filename;
+
+
+  Double Buffering.
+     Where possible VOGLE allows for front and  back  buffers  to
+     enable  things  like  animation  and  smooth updating of the
+     screen. The routine backbuffer is used to initialise  double
+     buffering.
+
+     backbuffer()
+          Make VOGLE draw in the backbuffer. Returns  -1  if  the
+          device is not up to it.
+
+               Fortran:
+                    integer function backbuffer
+
+               C:
+                    backbuffer()
+
+
+     frontbuffer()
+          Make VOGLE draw in the front buffer. This  will  always
+          work.
+
+               Fortran:
+                    subroutine frontbuffer
+
+               C:
+                    frontbuffer()
+
+
+     swapbuffers()
+          Swap the front and back buffers.
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   27
+
+
+
+
+
+
+VOGLE(3)               C LIBRARY FUNCTIONS               VOGLE(3)
+
+
+
+               Fortran:
+                    subroutine swapbuffers
+
+               C:
+                    swapbuffers()
+
+
+  Position Routines.
+     getgp(x, y, z)
+          Gets the current graphics position in world coords.
+
+               Fortran:
+                    subroutine getgp(x, y, z)
+                    real x, y, z
+
+               C:
+                    getgp(x, y, z)
+                         float *x, *y, *z;
+
+
+     getgp2(x, y)
+          Gets the current graphics position in world coords.
+
+               Fortran:
+                    subroutine getgp2(x, y)
+                    real x, y
+
+               C:
+                    getgp2(x, y)
+                         float *x, *y;
+
+
+     sgetgp2(x, y)
+          Gets the current screen  graphics  position  in  screen
+          coords (-1 to 1)
+
+               Fortran:
+                    subroutine sgetgp2(x, y)
+                    real x, y
+
+               C:
+                    sgetgp2(x, y)
+                         float *x, *y;
+
+
+BUGS
+     We had to make up the font names based on some books of type
+     faces.
+
+     Polygon hatching on 3 d polygons sometimes gives  unexpected
+     results.
+
+
+
+
+VOGLE 1.1           Last change: 29 Mar 1990                   28
+
+
+

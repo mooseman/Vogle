@@ -1,0 +1,27 @@
+vogle.lib
++farcs &
++faspect &
++fattr &
++fbuffer &
++fclip &
++fcurves &
++fdraw &
++fdrivers &
++fgetgp &
++fgetstr &
++fmatrix &
++fmove &
++fobjects &
++fpatches &
++fpoints &
++fpoly &
++fpref &
++frect &
++ft_strin &
++ftext &
++ftrans &
++fviewing &
++fviewp &
++fyobba
+vogle.lst
+vogle.lib

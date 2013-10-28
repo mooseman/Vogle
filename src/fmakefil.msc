@@ -1,0 +1,107 @@
+#
+MFLAGS = -MX
+
+OBJS = \
+	farcs.obj \
+	faspect.obj \
+	fattr.obj \
+	fbuffer.obj \
+	fclip.obj \
+	fcurves.obj \
+	fdraw.obj \
+	fdrivers.obj \
+	fgetgp.obj \
+	fgetstr.obj \
+	fmatrix.obj \
+	fmove.obj \
+	fobjects.obj \
+	fpatches.obj \
+	fpoints.obj \
+	fpoly.obj \
+	fpref.obj \
+	frect.obj \
+	ft_strin.obj \
+	ftext.obj \
+	ftrans.obj \
+	fviewing.obj \
+	fviewp.obj \
+	fyobba.obj
+
+# DEFAULT RULES
+
+#  FORTRAN INTERFACES
+#
+farcs.obj : msfort\farcs.asm
+	masm $(MFLAGS) msfort\$*;
+
+faspect.obj : msfort\faspect.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fattr.obj : msfort\fattr.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fbuffer.obj : msfort\fbuffer.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fclip.obj : msfort\fclip.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fcurves.obj : msfort/fcurves.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fdraw.obj : msfort/fdraw.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fdrivers.obj : msfort/fdrivers.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fgetgp.obj : msfort/fgetgp.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fgetstr.obj : msfort/fgetstr.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fmatrix.obj : msfort/fmatrix.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fmove.obj : msfort/fmove.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fobjects.obj : msfort/fobjects.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fpatches.obj : msfort/fpatches.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fpoints.obj : msfort/fpoints.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fpoly.obj : msfort/fpoly.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fpref.obj : msfort/fpref.asm 
+	masm $(MFLAGS) msfort\$*;
+
+frect.obj : msfort/frect.asm 
+	masm $(MFLAGS) msfort\$*;
+
+ft_strin.obj : msfort/ft_strin.asm 
+	masm $(MFLAGS) msfort\$*;
+
+ftext.obj : msfort/ftext.asm 
+	masm $(MFLAGS) msfort\$*;
+
+ftrans.obj : msfort/ftrans.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fviewing.obj : msfort/fviewing.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fviewp.obj : msfort/fviewp.asm 
+	masm $(MFLAGS) msfort\$*;
+
+fyobba.obj : msfort/fyobba.asm
+	masm $(MFLAGS) msfort\$*;
+
+FVOGLE.TMP: $(OBJS)
+        LIB @FLIB.IN

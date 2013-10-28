@@ -1,0 +1,1620 @@
+.TH VOGLE 3  "29 Mar 1990" "VOGLE 1.1"
+.UC 4
+.SH NAME
+VOGLE \- A very ordinary graphics learning environment.
+
+.SH DESCRIPTION
+.LP
+.I VOGLE
+is a library of C routines for doing line drawings and polygon fills in 2 and 3
+Dimensions. It handles circles, curves, arcs, patches, polygons, and software
+text in a device independent fashion. Simple hidden line removal is also
+available via polygon backfacing. Access to hardware text and double
+buffering of drawings depends on the driver.  There is also a FORTRAN
+interface but as it goes through the C routines FORTRAN users are warned
+that arrays are in row-column order in C.
+The following is a brief summary of the VOGLE subroutines.
+.SS Device routines.
+.TP
+.I vinit(device)
+Initialise the device.
+.nf
+                
+	Fortran:
+		subroutine vinit(device)
+		character *(*) device
+
+	C:    
+		vinit(device);
+		char     *device;
+
+	Note 1 :- Current available devices are:
+		    tek - tektronix 4010 and compatibles
+		    hpgl - HP Graphics language and compatibles
+		    postscript - postscript devices
+		    sun - Sun workstations
+		    X11 - Generic X windows 
+		    decX11 - the decstation window manager
+		    apollo - Apollo workstations
+		    hercules - IBM PC hercules graphics card
+		    cga - IBM PC cga graphics card
+		    ega - IBM PC ega graphics card
+		    vga - IBM PC vga graphics card
+		    sigma - IBM PC sigma graphics card.
+
+		    Sun, X11, decX11, apollo, hercules, cga
+		    and ega support double buffering.
+
+
+	Note 2 :- If device is a NULL or a null string the value
+		of the environment variable "VDEVICE" is taken as the
+		device type to be opened.
+
+	Note 3 :- after init it is wise to explicitly
+		clear the screen.
+
+	e.g.:
+		color(BLACK);
+		clear();
+	or
+		call color(BLACK)
+		call clear
+
+.fi
+.TP
+.I vexit()
+Reset the window/terminal (must be the last VOGLE routine called)
+.nf
+
+	Fortran:
+		subroutine vexit
+
+	C:
+		vexit()
+
+.fi
+.TP
+.I voutput(path)
+Redirect output from *next* vinit to file given by path. This routine only
+applies to devices drivers that write to stdout e.g. postscript and hpgl.
+.nf
+
+	Fortran:
+		subroutine voutput(path)
+		character*(*) path
+
+	C:
+		voutput(path)
+			char	*path;
+
+.fi
+.TP
+.I vnewdev(device)
+Reinitialize VOGLE to use a new device without changing attributes, viewport
+etc.
+(eg. window and viewport specifications)
+.nf
+	
+	Fortran:
+		subroutine vnewdev(device)
+		character *(*) device
+
+	C:
+		vnewdev(device)
+			char *device;
+
+.fi
+.TP
+.I vgetdev(device)
+Gets the name of the current VOGLE device. The C version of the
+routine also returns a pointer to it's argument.
+.nf
+	
+	Fortran:
+		subroutine vgetdev(device)
+		character *(*) device
+
+	C:
+		char *
+		vgetdev(device)
+			char *device;
+
+.fi
+.TP
+.I getdepth()
+Returns the number of bit planes (or color planes) for a particular
+device. The number of colors displayable by the device is then 2**(nplanes-1)
+.nf
+	
+	Fortran:
+		integer function  getdepth()
+
+	C:
+		int
+		getdepth()
+
+.fi
+.SS Routines For Setting Up Windows.
+These can make your code very device independant. Both routines take 
+arguments which are in device space. (0, 0) is the top left hand corner
+in device space. To have any effect these routines must be called before vinit.
+.TP
+.I prefposition(x, y)
+Specify the preferred position of the window opened by the *next* vinit.
+.nf
+
+	Fortran:
+		subroutine prefposition(x, y)
+		integer x, y
+
+	C:
+		prefposition(x, y)
+			int	x, y;
+
+.fi
+.TP
+.I prefsize(width, height)
+Specify the preferred width and height of the window opened by the
+*next* vinit.
+.nf
+
+	Fortran:
+		subroutine prefsize(width, height)
+		integer width, height
+
+	C:
+		prefsize(width, height)
+			int	width, height;
+	
+.fi
+.SS General Routines.
+.TP
+.I clear()
+Clears the screen to the current colour.
+.nf
+                
+	Fortran:
+		subroutine clear
+
+	C:    
+		clear()
+
+.fi
+.TP
+.I color(col)
+Set the current colour. The standard colours are as follows:
+.nf
+	black = 0       red = 1         green = 2       yellow = 3
+	blue = 4        magenta = 5     cyan = 6        white = 7.
+.fi
+.nf
+
+	Fortran:
+		subroutine color(col)
+		integer col
+	C:    
+		color(col)
+			int	col;
+
+.fi
+.TP
+.I mapcolor(indx, red, green, blue)
+Set the color map index indx to the color represented by (red, green, blue).
+If the device has no color map this call does nothing.
+.nf
+
+	Fortran:
+		subroutine mapcolor(indx, red, green, blue)
+		integer indx, red, green, blue
+	C:    
+		mapcolor(indx, red, green, blue)
+			int	indx, red, green, blue;
+
+.fi
+.TP
+.I clipping(onoff)
+Turn clipping on or off. Non-zero is considered on. Note: on some devices
+turning clipping off may not be a good idea.
+.nf
+
+	Fortran:
+		subroutine clipping(onoff)
+		logical onoff
+	C:    
+		clipping(onoff)
+			int	onoff;
+
+.fi
+.TP
+.I getkey()
+Return the ascii ordinal of the next key typed at the keyboard. If the
+device has no keyboard getkey returns -1.
+.nf
+
+	Fortran:
+		integer function getkey
+	C:    
+		int
+		getkey()
+
+.fi
+.TP
+.I checkkey()
+Returns zero if no key is pressed or the ascii ordinal of the key
+that was pressed.
+.nf
+
+	Fortran:
+		integer function checkkey()
+	C:
+		int
+		checkey()
+
+.fi
+.TP
+.I getstring(bcol, string)
+Read in a string, echoing it in the current font, using the current color and
+the current transformation. bcol is the background color which is used for
+erasing characters after a backspace or a delete key is received. Getstring
+interprets the Backspace key (ascii 8) and the Del key (ascii 127) as erasing
+characters. An EOT (ascii 4) or a Carraige return (ascii 13) will terminate
+input. Getstring returns the number of characters read. Getstring does not
+check for overflow in the input buffer string
+.nf
+
+	Fortran:
+		integer function getstring(bcol, string)
+		integer bcol
+		character *(*) string
+	C:    
+		int
+		getstring(bcol, string)
+			int	bcol;
+			char	*string;
+
+.fi
+.TP
+.I locator(xaddr, yaddr)
+Find out where the cursor is. xaddr and yaddr are set to the current location
+in world coordinates. The function returns a bit pattern which indicates which
+buttons are being held down eg. if mouse buttons 1 and 3 are down locator
+returns binary 101 (decimal 7). The function returns -1 if the device has no
+locator capability. Note: if you have been doing a lot of 3-D transformations
+xaddr and yaddr may not make a lot of sense. In this case use slocator. 
+.nf
+
+	Fortran:
+		integer function locator(xaddr, yaddr)
+		real xaddr, yaddr
+	C:    
+		int
+		locator(xaddr, yaddr)
+			float	*xaddr, *yaddr;
+
+.fi
+.TP
+.I slocator(xaddr, yaddr)
+Find out where the cursor is. xaddr and yaddr are set to the current location
+in screen coordinates. The return value of the function is set up in the same
+way as with locator.  If the device has no locator device 
+.I slocator
+returns -1.
+.nf
+
+	Fortran:
+		integer function slocator(xaddr, yaddr)
+		real xaddr, yaddr
+	C:    
+		int
+		slocator(xaddr, yaddr)
+			float	*xaddr, *yaddr;
+
+.fi
+.SS Viewport Routines.
+.TP
+.I viewport(left, right, bottom, top)
+Specify which part of the screen to draw in. Left, right, bottom, and top
+are real values in screen coordinates (-1.0 to 1.0).
+.nf
+                
+	Fortran:
+		subroutine viewport(left, right, bottom, top)
+		real left, right, bottom, top
+
+	C:    
+		viewport(left, right, bottom, top)
+			float      left, right, bottom, top;
+
+.fi
+.TP
+.I pushviewport()
+Save current viewport.
+.nf
+
+	Fortran:
+		subroutine pushviewport
+
+	C:    
+		pushviewport()
+
+.fi
+.TP
+.I popviewport()
+Retrieve last viewport.
+.nf
+
+	Fortran:
+		subroutine popviewport
+
+	C:    
+		popviewport()
+
+.fi
+.TP
+.I getviewport(left, right, bottom, top)
+Returns the left, right, bottom and top limits of the current viewport
+in screen coordinates (-1.0 to 1.0).
+.nf
+                
+	Fortran:
+		subroutine getviewport(left, right, bottom, top)
+		real left, right, bottom, top
+
+	C:    
+		getviewport(left, right, bottom, top)
+			float      *left, *right, *bottom, *top;
+
+.fi
+.SS Getting the aspect details
+.LP
+Often the screen is not perfectly square and it would be nice to use the
+extra space without having to turn clipping off. The following routines
+are provided to get the values needed to adjust the calls to viewport, etc
+as needed.
+.TP
+.I getaspect()
+Returns the ratio height over width of the display device.
+.nf
+
+	Fortran:
+		real function getaspect()
+
+	C:
+		float
+		getaspect()
+
+.fi
+.TP
+.I getfactors(wfact, hfact)
+Returns wfact as the width over min(width of device, height of device) and
+hfact as the height over min(width of device, height of device).
+.nf
+
+	Fortran:
+		subroutine getfactors(w, h)
+		real w, h
+
+	C:
+		getfactors(w, h)
+			float	*w, *h;
+
+.fi
+.TP
+.I getdisplaysize(w, h)
+Returns the width and height of the device in pixels in w and h respectively.
+.nf
+
+	Fortran:
+		subroutine getdisplaysize(w, h)
+		real w, h
+
+	C:
+		getdisplaysize(w, h)
+			float	*w, *h;
+
+.fi
+.SS Attribute Stack Routines.
+.LP
+The attribute stack contains details such as current color, filling, hatching,
+centered, fixedwidth, text height, text width, and the current font. If you
+need to prevent object calls form changing these, use
+.I pushattributes
+before the call and
+.I popattributes
+after.
+.TP
+.I pushattributes()
+Save the current attributes on the attribute stack.
+.nf
+
+	Fortran:
+		subroutine pushattributes
+
+	C:    
+		pushattributes()
+
+.fi
+.TP
+.I popattributes()
+Restore the attributes to what they were at the last
+.I pushattribute().
+.nf
+
+	Fortran:
+		subroutine popattributes
+
+	C:    
+		popattributes()
+
+.fi
+.SS Projection Routines.
+.LP
+All the projection routines define a new transformation matrix, and 
+consequently the world units. Parallel projections are defined by ortho or
+ortho2. Perspective projections can be defined by perspective and window.
+.TP
+.I ortho(left, right, bottom, top, near, far)
+Define x (left, right), y (bottom, top), and z (near, far) clipping
+planes. The near and far clipping planes are actually specified as
+distances along the line of sight. These distances can also be negative.
+The actual location of the clipping planes is z = -near_d and z = -far_d.
+.nf
+
+	Fortran:
+		subroutine ortho(left, right, bottom, top, near_d, far_d)
+		real left, right, bottom, top, near_d, far_d
+
+	C:
+		ortho(left, right, bottom, top, near_d, far_d)
+			float 	left, right, bottom, top, near_d, far_d;
+
+.fi
+.TP
+.I ortho2(left, right, bottom, top)
+Define x (left, right), and y (bottom, top) clipping planes.
+.nf
+
+	Fortran:
+		subroutine ortho2(left, right, bottom, top)
+		real left, right, bottom, top
+
+	C:
+		ortho2(left, right, bottom, top)
+			float	left, right, bottom, top;
+
+.fi
+.TP
+.I perspective(fov, aspect, near, far)
+Specify a perspective viewing pyramid in world coordinates by
+giving a field of view, aspect ratio and the distance from the
+eye of the near and far clipping plane.
+.nf
+
+	Fortran:
+		subroutine perspective(fov, aspect, near, far)
+		real fov, aspect, near, far
+
+	C:
+		perspective(fov, aspect, near, far)
+			float 	fov, aspect, near, far;
+
+.nf
+.TP
+.I window(left, right, bot, top, near, far)
+Specify a perspective viewing pyramid in world coordinates by
+give the rectangle closest to the eye (ie. at the near clipping
+plane) and the distances to the near and far clipping planes.
+.nf
+                
+	Fortran:
+		subroutine window(left, right, bot, top, near, far)
+		real left, right, bot, top, near, far
+
+	C:    
+		window(left, right, bot, top, near, far)
+			float     left, right, bot, top, near, far;
+
+
+.fi
+.SS Matrix Stack Routines.
+.TP
+.I pushmatrix()
+Save the current transformation matrix on the matrix stack.
+.nf
+
+	Fortran:
+		subroutine pushmatrix
+
+	C:
+		pushmatrix()
+
+.fi
+.TP
+.I popmatrix()
+Retrieve the last matrix pushed and make it the current transformation
+matrix.
+.nf
+
+	Fortran:
+		subroutine popmatrix
+
+	C:
+		popmatrix()
+
+.fi
+.SS Viewpoint Routines.
+.LP
+Viewpoint routines alter the current tranformation matrix.
+.TP
+.I polarview(dist, azim, inc, twist)
+Specify the viewer's position in polar coordinates by giving
+the distance from the viewpoint to the world origin,
+the azimuthal angle in the x-y plane, measured from the y-axis,
+the incidence angle in the y-z plane, measured from the z-axis,
+and the twist angle about the line of sight.
+.nf
+
+	Fortran:
+		subroutine polarview(dist, azim, inc, twist)
+		real dist, azim, inc, twist
+
+	C:
+		polarview(dist, azim, inc, twist)
+			float	dist, azim, inc, twist;
+
+.fi
+.TP
+.I up(x, y, z)
+Specify the world up. This can be used to prevent lookat's sometimes
+annoying habit of turning everything upside down due to the line of sight
+crossing the appropriate axis.
+.nf
+
+	Fortran:
+		subroutine up(x, y, z)
+		real x, y, z
+
+	C:
+		up(x, y, z)
+			float	x, y, z;
+
+.fi
+.TP
+.I
+lookat(vx, vy, vz, px, py, pz, twist)
+Specify the viewer's position by giving a viewpoint and a
+reference point in world coordinates. A twist about the line
+of sight may also be given.
+.nf
+
+	Fortran:
+		subroutine lookat(vx, vy, vz, px, py, pz, twist)
+		real vx, vy, vz, px, py, pz, twist
+
+	C:
+		lookat(vx, vy, vz, px, py, pz, twist)
+			float	vx, vy, vz, px, py, pz, twist;
+
+.fi
+.SS Move Routines.
+.TP
+.I move(x, y, z)
+Move current graphics position to (x, y, z). (x, y, z) is a point in
+world coordinates.
+.nf
+
+	Fortran:
+		subroutine move(x, y, z)
+		real x, y, z
+
+	C:    
+		move(x, y, z)
+			float	x, y, z;
+
+.fi
+.TP
+.I rmove(deltax, deltay, deltaz)
+Relative move. deltax, deltay, and deltaz are offsets in world
+units.
+.nf
+
+	Fortran:
+		subroutine rmove(deltax, deltay, deltaz)
+		real deltax, deltay, deltaz
+
+	C:    
+		rmove(deltax,deltay)
+			float   deltax, deltay, deltaz;
+
+.fi
+.TP
+.I move2(x, y)
+Move graphics position to point (x, y). (x, y) is a point in world
+coordinates.
+.nf
+
+	Fortran:
+		subroutine move2(x, y)
+		real x, y
+
+	C:    
+		move2(x, y)
+			float	x, y;
+
+.fi
+.TP
+.I rmove2(deltax, deltay)
+Relative move2. deltax and deltay are offsets in world units.
+.nf
+
+	Fortran:
+		subroutine rmove2(deltax, deltay)
+		real deltax, deltay
+
+	C:    
+		rmove2(deltax, deltay)
+			float	deltax, deltay;
+
+.fi
+.TP
+.I smove2(x, y)
+Move current graphics position in screen coordinates (-1.0 to 1.0).
+.nf
+
+	Fortran:
+		subroutine smove2(x, y)
+		real x, y
+
+	C:    
+		smove2(x, y)
+			float	x, y;
+
+.fi
+.TP
+.I rsmove2(deltax, deltay)
+Relative smove2. deltax, and deltay are offsets in screen units (-1.0 to 1.0).
+.nf
+
+	Fortran:
+		subroutine rsmove2(deltax, deltay)
+		real deltax, deltay
+
+	C:    
+		rsmove2(deltax, deltay)
+			float	deltax, deltay;
+
+.fi
+.SS Drawing Routines.
+.LP
+.TP
+.I draw(x, y, z)
+Draw from current graphics position to (x, y, z). (x, y, z) is a point in
+world coordinates.
+.nf
+
+	Fortran:
+		subroutine draw(x, y, z)
+		real x, y, z
+
+	C:    
+		draw(x, y, z)
+			float	x, y, z;
+
+.fi
+.TP
+.I rdraw(deltax, deltay, deltaz)
+Relative draw. deltax, deltay, and deltaz are offsets in world units.
+.nf
+
+	Fortran:
+		subroutine rdraw(deltax, deltay, deltaz)
+		real deltax, deltay, deltaz
+
+	C:    
+		rdraw(deltax, deltay, deltaz)
+			float   deltax, deltay, deltaz;
+
+.fi
+.TP
+.I draw2(x, y)
+Draw from current graphics position to point (x, y). (x, y) is a point in
+world coordinates.
+.nf
+
+	Fortran:
+		subroutine draw2(x, y)
+		real x, y
+
+	C:    
+		draw2(x, y)
+			float	x, y;
+
+.fi
+.TP
+.I rdraw2(deltax,deltay)
+Relative draw2. deltax and deltay are offsets in world units.
+.nf
+
+	Fortran:
+		subroutine rdraw2(deltax, deltay)
+		real deltax, deltay
+
+	C:    
+		rdraw2(deltax, deltay)
+			float   deltax, deltay;
+
+.fi
+.TP
+.I sdraw2(x, y)
+Draw in screen coordinates (-1.0 to 1.0).
+.nf
+
+	Fortran:
+		subroutine sdraw2(x, y)
+		real x, y
+
+	C:    
+		sdraw2(x, y)
+			float	x, y;
+
+.fi
+.TP
+.I rsdraw2(deltax, deltay)
+Relative sdraw2. delatx and deltay are in screen units (-1.0 to 1.0).
+.nf
+
+	Fortran:
+		subroutine rsdraw2(deltax, deltay)
+		real deltax, deltay
+	C:    
+		rsdraw2(deltax, deltay)
+			float	deltax, deltay;
+
+.fi
+.SS Arcs and Circles.
+.TP
+.I circleprecision(nsegs)
+Set the number of line segments making up a circle. Default is
+currently 32. The number of segments in an arc or sector is
+calculated from nsegs according the span of the arc or sector.
+This replaces the routine arcprecision.
+.nf
+	Fortran:
+		subroutine circleprecision(nsegs)
+		integer	nsegs
+	C:
+		circleprecision(nsegs)
+			int	nsegs;
+
+.fi
+.TP
+.I arc(x, y, radius, startang, endang)
+Draw an arc. x, y, and radius are values in world units.
+.nf
+
+	Fortran:
+		subroutine arc(x, y, radius, startang, endang)
+		real x, y, radius;
+		real startang, endang;
+	C:    
+		arc(x, y, radius, startang, endang)
+			float  x, y, radius;
+			float  startang, endang;
+
+.fi
+.TP
+.I sector(x, y, radius, startang, endang)
+Draw a sector. x, y, and radius are values in world units. Note: sectors are
+regarded as polygons, so if polyfill or polyhatch has been called with 1, the
+sectors will be filled or hatched accordingly.
+.nf
+
+	Fortran:
+		subroutine sector(x, y, radius, startang, endang)
+		real x, y, radius;
+		real startang, endang;
+	C:    
+		sector(x, y, radius, startang, endang)
+			float  x, y, radius;
+			float  startang, endang;
+
+.fi
+.TP
+.I circle(x, y, radius)
+Draw a circle. x, y, and radius are values in world units. Note: circles are
+regarded as polygons, so if polyfill or polyhatch has been called with 1, the
+circle will be filled or hatched accordingly.
+.nf
+	x and y real coordinates in user units.
+
+	Fortran:
+		subroutine circle(x, y, radius)
+		real	x, y, radius
+	C:    
+		circle(x, y, radius)
+			float	x, y, radius;
+
+.fi
+.SS Curve Routines.
+.TP
+.I curvebasis(basis)
+Define a basis matrix for a curve.
+.nf
+
+	Fortran: 
+		subroutine curvebasis(basis)
+		real basis(4,4)
+	C:
+		curvebasis(basis)
+			float	basis[4][4];
+
+.fi
+.TP
+.I curveprecision(nsegs)
+Define the number of line segments used to draw a curve.
+.nf
+
+	Fortran: 
+		subroutine curveprecision(nsegs)
+		integer nsegs
+	C:
+		curveprecision(nsegs)
+			int	nsegs;
+
+.fi
+.TP
+.I rcurve(geom)
+Draw a rational curve.
+.nf
+
+	Fortran: 
+		subroutine rcurve(geom)
+		real geom(4,4)
+	C:
+		rcurve(geom)
+			float	geom[4][4];
+
+.fi
+.TP
+.I curve(geom)
+Draw a curve.
+.nf
+
+	Fortran: 
+		subroutine curve(geom)
+		real geom(3,4)
+	C:
+		curve(geom)
+			float	geom[4][3];
+
+.fi
+.TP
+.I curven(n, geom)
+Draw n - 3 overlapping curve segments. Note: n must be at least 4.
+.nf
+
+	Fortran: 
+		subroutine curven(n, geom)
+		integer n
+		real geom(3,n)
+	C:
+		curven(n, geom)
+			int	n;
+			float	geom[][3];
+
+.fi
+.SS Rectangles and General Polygon Routines.
+.TP
+.I rect(x1, y1, x2, y2)
+Draw a rectangle. 
+.nf
+
+	Fortran:
+		subroutine rect(x1, y1, x2, y2)
+		real x1, y1, x1, y2
+	C:    
+		rect(x1, y1, x2, y2)
+			float	x1, y1, x2, y2;
+
+.fi
+.TP
+.I polyfill(onoff)
+Set the polygon fill flag. This will always turn off hatching. A non-zero
+ (.true. ) turns polyfill on.
+.nf
+
+	Fortran:
+		subroutine polyfill(onoff)
+		logical onoff
+	C:
+		polyfill(onoff)
+			int	onoff;
+
+.fi
+.TP
+.I polyhatch(onoff)
+Set the polygon hatch flag. This will always turn off fill. A non-zero
+ (.true.) turns polyhatch on.
+.nf
+
+	Fortran:
+		subroutine polyhatch(onoff)
+		logical	onoff
+	C:
+		polyhatch(onoff)
+			int	onoff;
+
+.fi
+.TP
+.I hatchang(angle)
+Set the angle of the hatch lines.
+.nf
+
+	Fortran:
+		subroutine hatchang(angle)
+		real angle
+	C:
+		hatchang(angle)
+			float	angle;
+
+.fi
+.TP
+.I hatchpitch(pitch)
+Set the distance between hatch lines.
+.nf
+
+	Fortran:
+		subroutine hatchpitch(pitch)
+		real pitch
+	C:
+		hatchpitch(pitch)
+			float	pitch;
+
+.fi
+.TP
+.I poly2(n, points)
+Construct an (x, y) polygon from an array of points provided by the user.
+.nf
+
+	Fortran:
+		subroutine poly2(n, points)
+		integer	n
+		real points(2, n)
+	C:
+		poly2(n,  points)
+			int	n;
+			float	points[][2];
+
+.fi
+.TP
+.I poly(n, points)
+Construct a polygon from an array of points provided by the user.
+.nf
+
+	Fortran:
+		subroutine poly(n, points)
+		integer	n
+		real points(3, n)
+	C:
+		poly(n,  points)
+			int	n;
+			float	points[][3];
+
+.fi
+.TP
+.I makepoly()
+makepoly opens up a polygon which will then be constructed by a series
+of move-draws and closed by a closepoly.
+.nf
+
+	Fortran:
+		subroutine makepoly
+	C:
+		makepoly()
+
+.fi
+.TP
+.I closepoly()
+Terminates a polygon opened by makepoly.
+.nf
+
+	Fortran:
+		subroutine closepoly
+	C:
+		closepoly()
+
+.fi
+.TP 
+.I backface(onoff)
+Turns on culling of backfacing polygons. A polygon is
+backfacing if it's orientation in *screen* coords is clockwise,
+unless a call to backfacedir is made.
+.nf
+
+	Fortran:
+		subroutine backface(onoff)
+		integer onoff
+
+	C:
+		backface(onoff)
+			int	onoff;
+
+.fi
+.TP
+.I backfacedir(clockwise)
+Sets the backfacing direction to clockwise or anticlockwise
+depending on whether clockwise is 1 or 0.
+.nf
+
+	Fortran:
+		subroutine backfacedir(clockwise)
+		integer clockwise
+
+	C:
+		backfacedir(clockwise)
+			int	clockwise;
+
+.fi
+.SS Text Routines.
+.LP
+VOGLE supports hardware and software fonts. The software fonts are based
+on the character set digitized by Dr Allen V. Hershey while working at the
+U. S. National Bureau of Standards. Exactly what hardware fonts are supported 
+depends on the device, but it is guaranteed that the names "large" and "small"
+will result in something readable. It is noted here that text is always 
+assumed to be drawn parallel to the (x, y) plane, using whatever the current
+z coordinate is. The following software fonts are supported:
+.nf
+	astrology       cursive         cyrillic        futura.l
+	futura.m        gothic.eng      gothic.ger      gothic.ita
+	greek           markers         math.low        math.upp
+	meteorology     music           script          symbolic
+	times.g         times.i         times.ib        times.r
+	times.rb        japanese
+.fi
+A markers font "markers" is also provided for doing markers - you need to have
+centertext on for this to give sensible results - with the markers starting
+at 'A' and 'a'.
+.LP
+If the environment variable "VFONTLIB" is set VOGLE looks for the
+software fonts in the directory given by this value.
+.TP
+.I font(fontname)
+Set the current font
+.nf
+
+	Fortran:
+		subroutine font(fontname)
+		character*(*) fontname
+	C:    
+		font(fontname)
+			char	*fontname
+
+.fi
+.TP
+.I numchars()
+Return the number of characters in the current font. Applicable only
+to software fonts.
+.nf
+
+	Fortran:
+		integer function numchars
+	C:    
+		int
+		numchars()
+
+.fi
+.TP
+.I textsize(width, height)
+Set the maximum size of a character in the current font. Width and height
+are values in world units. This only applies to software text. This must be
+done after the font being scaled is loaded.
+.nf
+
+	Fortran:
+		subroutine textsize(width, height)
+		real width, height
+	C:    
+		textsize(width, height)
+			float	width, height;
+
+.fi
+.TP
+.I textang(ang)
+Set the text angle. This angles strings and chars. This routine only
+affects software text.
+.nf
+
+	Fortran:
+		subroutine textang(ang)
+		real ang
+	C:    
+		textang(ang)
+			float	ang;
+
+.fi
+.TP
+.I fixedwidth(onoff)
+Turns fixedwidth text on or off. Non-zero (.true.) is on. Causes all text to be
+printed fixedwidth. This routine only affects software text.
+.nf
+
+	Fortran:
+		subroutine fixedwidth(onoff)
+		logical onoff
+	C:    
+		fixedwidth(onoff)
+			int onoff;
+
+.fi
+.TP
+.I centertext(onoff)
+Turns centertext text on or off. Non-zero (.true.) is on. This centres strings
+and chars. This routine only affects software text.
+.nf
+
+	Fortran:
+		subroutine centertext(onoff)
+		logical onoff
+	C:    
+		centertext(onoff)
+			int onoff;
+
+.fi
+.TP
+.I getcharsize(c, width, height)
+Get the width and height of a character. At the moment the
+height returned is always that of the difference between the maximum 
+descender and ascender. 
+.nf
+
+	Fortran:
+		subroutine getcharsize(c, width, height)
+		character*1 c
+		real width, height
+	C:    
+		getcharsize(c, width, height)
+			char	c;
+			float	*width, *height;
+
+.fi
+.TP
+.I getfontsize(width, height)
+Get the maximum width and height of a character in a font. 
+.nf
+
+	Fortran:
+		subroutine getfontsize(width, height)
+		real width, height
+	C:    
+		getfontsize(width, height)
+			float	*width, *height;
+
+.fi
+.TP
+.I drawchar(c)
+Draw the character c. The current graphics position represents the bottom
+left hand corner of the character space.
+.nf
+
+	Fortran:
+		subroutine drawchar(c)
+		character c
+	C:    
+		drawchar(str)
+			char c;
+
+.fi
+.TP
+.I drawstr(str)
+Draw the text in string at the current position.
+.nf
+
+	Fortran:
+		subroutine drawstr(str)
+		character*(*) str
+	C:    
+		drawstr(str)
+			char *str;
+
+.fi
+.TP
+.I strlength(str)
+Return the length of the string s in world units.
+.nf
+
+	Fortran:
+		real function strlength(str)
+		character*(*) str
+	C:    
+		float
+		strlength(str)
+			char *str;
+
+.fi
+.TP
+.I boxtext(x, y, l, h, s)
+Draw the string s so that it fits in the imaginary box defined with bottom
+left hand corner at (x, y), length l, and hieght h. This only applies to 
+software text.
+.nf
+
+	Fortran:
+		subroutine boxtext(x, y, l, h, s)
+		real x, y, l, h, s
+	C:    
+		boxtext(x, y, l, h, s)
+			float	x, y, l, h, s;
+
+.fi
+.TP
+.I boxfit(l, h, nchars)
+Set scale for text so that a string of the biggest characters in the
+font will fit in a box l by h. l and h are real values in world dimensions.
+This only applies to software text.
+.nf
+
+	Fortran:
+		subroutine boxfit(l, h, nchars)
+		real l, h
+		integer nchars
+	C:    
+		boxfit(l, h, nchars)
+			float	l, h
+			int	nchars
+
+.fi
+.SS Transformations Routines.
+.LP
+All transformations are cumulative, so if you rotate something and then
+do a translate you are translating relative to the rotated axes. If you need
+to preserve the current transformation matrix use pushmatrix(), do the
+drawing, and then call popmatrix() to get back where you were before.
+.TP
+.I translate(x, y, z)
+Set up a translation. 
+.nf
+
+	Fortran:
+		subroutine translate(x, y, z)
+		real x, y, z
+	C:
+		translate(x, y, z)
+			float	x, y, z;
+
+.fi
+.TP
+.I scale(x, y, z)
+Set up scaling factors in x, y, and z axis.
+.nf
+
+	Fortran:
+		subroutine scale(x, y, z)
+		real x, y, z
+	C:
+		scale(x, y, z)
+			float	x, y, z;
+
+.fi
+.TP
+.I rotate(angle, axis)
+Set up a rotation in axis axis. Where axis is one of 'x', 'y', or 'z'.
+.nf
+
+	Fortran:
+		subroutine rotate(angle, axis)
+		real angle
+		character axis
+	C:
+		rotate(angle, axis)
+			float	angle;
+			char	axis;
+
+.fi
+.SS Patch Routines.
+.TP
+.I patchbasis(tbasis, ubasis)
+Define the t and u basis matrices of a patch.
+.nf
+
+	Fortran:
+		subroutine patchbasis(tbasis, ubasis)
+		real tbasis(4, 4), ubasis(4, 4)
+	C:
+		patchbasis(tbasis, ubasis)
+			float	tbasis[4][4], ubasis[4][4];
+
+.fi
+.TP
+.I patchprecision(tseg, useg)
+Set the minimum number of line segments making up curves in a patch.
+.nf
+
+	Fortran:
+		subroutine patchprecision(tseg, useg)
+		integer tseg, useg
+	C:
+		patchprecision(tseg, useg)
+			int     tseg, useg;
+
+.fi
+.TP
+.I patchcurves(nt, nu)
+Set the number of curves making up a patch.
+.nf
+
+	Fortran:
+		subroutine patchcurves(nt, nu)
+		integer nt, nu
+	C:
+		patchcurves(nt, nu)
+			int     nt, nu;
+
+.fi
+.TP
+.I rpatch(gx, gy, gz, gw)
+Draws a rational patch in the current basis, according to the geometry
+matrices gx, gy, gz, and gw.
+.nf
+
+	Fortran:
+		subroutine rpatch(gx, gy, gz, gw)
+		real  gx(4,4), gy(4,4), gz(4,4), gw(4,4)
+	C:
+		rpatch(gx, gy, gz, gw)
+		    float  gx[4][4], gy[4][4], gz[4][4], gw[4][4];
+
+.fi
+.TP
+.I patch(gx, gy, gz)
+Draws a patch in the current basis, according to the geometry
+matrices gx, gy, and gz.
+.nf
+
+	Fortran:
+		subroutine patch(gx, gy, gz)
+		real  gx(4,4), gy(4,4), gz(4,4)
+	C:
+		patch(gx, gy, gz)
+			float  gx[4][4], gy[4][4], gz[4][4];
+
+.fi
+.SS Point Routines.
+.TP
+.I point(x, y, z)
+Draw a point at x, y, z
+.nf
+
+	Fortran:
+		subroutine point(x, y, z)
+		real x, y, z
+	C:
+		point(x, y, z)
+			real	x, y, z;
+
+.fi
+.TP
+.I point2(x, y)
+Draw a point at x, y.
+.nf
+
+	Fortran:
+		subroutine point2(x, y)
+		real x, y
+	C:
+		point2(x, y)
+			float	x, y;
+
+.fi
+.SS Object Routines.
+.LP
+Objects are graphical entities created by the drawing routines called between
+.I makeobj
+and
+.I closeobj.
+Objects may be called from within other objects. When an object
+is created most of the calculations required by the drawing routines called
+within it are done up to where the calculations involve the current
+transformation matrix. So if you need to draw the same thing several times
+on the screen but in different places it is faster to use objects than
+to call the appropriate drawing routines each time. Objects also have
+the advantage of being saveable to a file, from where they can be reloaded for
+later reuse. Routines which draw or move in screen coordinates, or change
+device, cannot be included in objects.
+.TP
+.I makeobj(n)
+Commence the object number n.
+.nf
+
+	Fortran:
+		subroutine makeobj(n)
+		integer n
+	C:
+		makeobj(n)
+			int	n;
+
+.fi
+.TP
+.I closeobj()
+Close the current object.
+.nf
+
+	Fortran:
+		subroutine closeobj()
+	C:
+		closeobj()
+
+.fi
+.TP
+.I genobj()
+Returns a unique object identifier.
+.nf
+
+	Fortran:
+		integer function genobj()
+	C:
+		int
+		genobj()
+
+.fi
+.TP
+.I getopenobj()
+Return the number of the current object.
+.nf
+
+	Fortran:
+		integer function getopenobj()
+	C:
+		int
+		getopenobj()
+
+.fi
+.TP
+.I callobj(n)
+Draw object number n.
+.nf
+
+	Fortran:
+		subroutine callobj(n)
+		integer n
+	C:
+		callobj(n)
+			int	n;
+
+.fi
+.TP
+.I isobj(n)
+Returns non-zero if there is an object of number n.
+.nf
+
+	Fortran:
+		logical function isobj(n)
+		integer n
+	C:
+		int
+		isobj(n)
+			int	n;
+
+.fi
+.TP
+.I loadobj(n, filename)
+Load the object in the file filename a object number n.
+.nf
+
+	Fortran:
+		loadobj(n, filename)
+		integer n
+		character*(*) filename
+	C:
+		loadobj(n, filename)
+			int     n;
+			char    *filename;
+
+.fi
+.TP
+.I saveobj(n, filename)
+Save the object number n into the file filename. This call does not
+save objects called inside object n.
+.nf
+
+	Fortran:
+		saveobj(n, filename)
+		integer	n
+		character*(*) filename
+	C:
+		saveobj(n, filename)
+			int	n;
+			char	*filename;
+
+.fi
+.SS Double Buffering.
+Where possible VOGLE allows for front and back buffers
+to enable things like animation and smooth updating of
+the screen. The routine backbuffer is used to initialise
+double buffering.
+.TP
+.I backbuffer()
+Make VOGLE draw in the backbuffer. Returns -1
+if the device is not up to it.
+.nf
+
+	Fortran:
+		integer function backbuffer
+	
+	C:
+		backbuffer()
+
+.fi
+.TP
+.I frontbuffer()
+Make VOGLE draw in the front buffer. This will always
+work.
+.nf
+
+	Fortran:
+		subroutine frontbuffer
+
+	C:
+		frontbuffer()
+
+.fi
+.TP
+.I swapbuffers()
+Swap the front and back buffers.
+.nf
+
+	Fortran:
+		subroutine swapbuffers
+
+	C:
+		swapbuffers()
+
+.fi
+.SS Position Routines.
+.TP
+.I getgp(x, y, z)
+Gets the current graphics position in world coords.
+.nf
+		
+	Fortran:
+		subroutine getgp(x, y, z)
+		real x, y, z
+
+	C:
+		getgp(x, y, z)
+			float *x, *y, *z;
+
+.fi
+.TP
+.I getgp2(x, y)
+Gets the current graphics position in world coords.
+.nf
+		
+	Fortran:
+		subroutine getgp2(x, y)
+		real x, y
+
+	C:
+		getgp2(x, y)
+			float *x, *y;
+
+.fi
+.TP
+.I sgetgp2(x, y)
+Gets the current screen graphics position in screen coords (-1 to 1)
+.nf
+
+	Fortran:
+		subroutine sgetgp2(x, y)
+		real x, y
+
+	C:
+		sgetgp2(x, y)
+			float *x, *y;
+.fi
+
+.SH BUGS
+.LP
+We had to make up the font names based on some books of type faces.
+.LP
+Polygon hatching on 3 d polygons sometimes gives unexpected results.

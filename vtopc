@@ -1,0 +1,28 @@
+#
+# Changes a few names from UNIX to PC crap so that We can
+# use the SUN PC-tool
+#
+mv vogle/README vogle/readme
+mv vogle/TFTD vogle/tftd
+mv vogle/Makefile vogle/makefile
+mv vogle/src/Makefile vogle/src/makefile
+mv vogle/src/README vogle/src/readme
+mv vogle/src/newtokens.c vogle/src/newtoken.c
+mv vogle/src/yobbarays.c vogle/src/yobbaray.c
+mv vogle/src/getstring.c vogle/src/getstrin.c
+mv vogle/src/sunfort/README vogle/src/sunfort/readme
+mv vogle/src/sunfort/Makefile vogle/src/sunfort/makefile
+mv vogle/src/sunfort/Makefile.unx vogle/src/sunfort/makefile.unx
+mv vogle/src/sunfort/fyobbarays.c vogle/src/sunfort/fyobbara.c
+mv vogle/drivers/Makefile vogle/drivers/makefile
+mv vogle/drivers/README vogle/drivers/readme
+mv vogle/drivers/X11.c vogle/drivers/x11.c
+mv vogle/drivers/ibmpc/README vogle/drivers/ibmpc/readme
+mv vogle/examples/README vogle/examples/readme
+mv vogle/examples/Makefile vogle/examples/makefile
+mv vogle/examples/Makefile.f77 vogle/examples/makefile.f77
+mv vogle/hershey/README vogle/hershey/readme
+mv vogle/hershey/data/README vogle/hershey/data/readme
+mv vogle/hershey/fonts/README vogle/hershey/fonts/readme
+mv vogle/hershey/src/README vogle/hershey/src/readme
+mv vogle/hershey/src/Makefile vogle/hershey/src/makefile

@@ -1,0 +1,25 @@
+CFLAGS = -DPC -ml -I..\..\src
+LIB = ..\..\src\vogle.lib
+
+all: h2v.exe hdisp.exe fdisp.exe 
+
+.c.obj:
+	tcc -c $(CFLAGS) $*.c
+
+h2v.obj: h2v.c h2v.h
+
+getchar.obj: getchar.c
+
+hdisp.obj: hdisp.c
+
+fdisp.obj: fdisp.c
+
+h2v.exe: h2v.c getchar.obj
+	tcc $(CFLAGS) h2v.c getchar.obj
+
+hdisp.exe: hdisp.c getchar.obj $(LIB)
+	tcc $(CFLAGS) hdisp.c getchar.obj $(LIB)
+
+fdisp.exe: fdisp.c $(LIB)
+	tcc $(CFLAGS) fdisp.c $(LIB)
+

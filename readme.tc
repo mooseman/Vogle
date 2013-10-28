@@ -1,0 +1,12 @@
+TurboC users should note that TurboC defines a "poly" routine in "math.h"
+and that this sometimes conficts with our definition of "poly" in "vogle.h"
+
+To Build everything using TurboC:
+
+  	cd vogle\src
+	make -fmakefile.tc
+	cd ..\hershey\src
+	make -fmakefile.tc
+	mkfnts c:\lib\hershey		<== does a cd to vogle\examples
+	make -fmakefile.tc
+	

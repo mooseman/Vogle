@@ -1,0 +1,21 @@
+
+VOGLE 1.1 has the following differences from 1.0:
+
+Drivers:
+	These have been extended to incorporate double
+	buffering, the X11 driver should now work
+	under anything (exception a dec workstation
+	use decX11), the sun driver refreshes the window
+	if it erased.
+
+Library:
+	Routines for doing backfacing, doublebuffering,
+	positioning and sizing of windows (where it is allowed),
+	getting info about the screen aspect ratio, specifying
+	a world up vector, reading in a string of input have
+	been added (it is best to look at the manual page for
+	these).
+
+Examples:
+	There are some new examples demonstrating, position
+	calls, backfacing, and doublebuffering.

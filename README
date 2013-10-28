@@ -1,0 +1,24 @@
+
+ ***  README -  Vogle *** 
+
+ Vogle is an old public-domain graphics library. 
+
+ From the old README -  
+
+"VOGLE is a device portable graphics library that is loosely based on the
+Silicon Graphics Iris GL. It was inspired partly by the DIGS library developed
+at the U.S. Naval Academy under the guidance of Prof David Rogers, and in the
+light of experience gained by some of the authors when working on the C-DIGS
+project at the Royal Melbourne Institute of Technology, Australia, with Mike
+Gigante." 
+
+ As with D-Flat, the intention is to get this updated so that it runs on Linux. 
+
+ It is public domain so (as usual) - "share and enjoy....."  ;)  
+
+- mooseman 
+
+  
+
+
+

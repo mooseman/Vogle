@@ -1,0 +1,60 @@
+
+The directories in this directory contain the source for the VOGLE library.
+
+They are as follows:
+
+	docs		contains the documentation such as there is.
+
+	drivers		contains the source to a variety of device drivers,
+			currently restricted to: postcript, sun workstation, 
+			apollo workstations, X11 (R2 and R3), tektronix (401x),
+			hpgl, dxy, and the ibm pc cards: hercules mono, cga,
+			ega, vga.
+
+	examples	contains some C and FORTRAN programs useful both in
+			testing and (hopefully) learning how to use it.
+
+	hershey		contains the source for generating fonts and the
+			hershey data for the occidental and oriental character
+			sets.
+
+	src		contains the source for the C VOGLE interface, and the 
+			source for the FORTRAN interfaces where available.
+			
+VOGLE is a device portable graphics library that is loosely based on the
+Silicon Graphics Iris GL. It was inspired partly by the DIGS library developed
+at the U.S. Naval Academy under the guidance of Prof David Rogers, and in the
+light of experience gained by some of the authors when working on the C-DIGS
+project at the Royal Melbourne Institute of Technology, Australia, with Mike
+Gigante.
+
+As we will be continuing development on VOGLE we will gratefully accept any
+bug fixes or enhancements such as new drivers, etc... People here mainly use it
+to move engineering type software between IBM PCs and Sun workstations but we
+expect not only our equipment, but our requirements to change, so if you find
+it usefull for anything in particular we wouldn't mind hearing from you as
+well.
+
+This software is public domain and may be used for any purpose commercial or
+otherwise. It is offered without any guarantee as to its suitability for any
+purpose or as to the sanity of its writers. We do ask that the source is 
+passed on to anyone that requests a copy.
+
+Although VOGLE is public domain we will drink any quantity of Beer you send to
+us.
+
+Regards,
+
+	Eric H. Echidna
+
+Snail mail correspondance and alcoholic beverages should be directed to:
+
+	The Software Support Programmer
+	Department Of Engineering Computer Resources
+	Faculty Of Engineering
+	University Of Melbourne Vic 3052
+	Australia
+
+email to 
+
+	echidna@munnari.OZ.AU

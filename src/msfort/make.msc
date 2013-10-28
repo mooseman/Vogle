@@ -1,0 +1,121 @@
+F = -FPa
+FFLAGS = -nologo -Ox -4Nt -Fa -Fonul -c -AL $(F)
+FFLAGS2 = -nologo -4Nt -c -AL -Ox $(F)
+CFLAGS = -nologo -c -AL -Ox $(F)
+
+.for.asm:
+	fl $(FFLAGS) $*.for
+	zap_c < $*.asm > tmp.asm 
+	del $*.asm
+ 	ren tmp.asm $*.asm
+
+.asm.obj:
+	masm -MX $*.asm;
+
+zap_c.exe: zap_c.c
+	cl zap_c.c
+
+farcs.asm: farcs.for
+
+fattr.asm: fattr.for
+
+faspect.asm: faspect.for
+
+fbuffer.asm: fbuffer.for
+
+fpref.asm: fpref.for
+
+fclip.asm: fclip.for
+
+fcurves.asm: fcurves.for
+
+fdraw.asm: fdraw.for
+
+fdrivers.asm: fdrivers.for
+
+fgetgp.asm: fgetgp.for
+
+fmatrix.asm: fmatrix.for
+
+fmove.asm: fmove.for
+
+fobjects.asm: fobjects.for
+
+fpatches.asm: fpatches.for
+
+fpoints.asm: fpoints.for
+
+fpoly.asm: fpoly.for
+
+frect.asm: frect.for
+
+ftext.asm: ftext.for
+
+ftrans.asm: ftrans.for
+
+fviewing.asm: fviewing.for
+
+fviewp.asm: fviewp.for
+
+ft_strin.asm: ft_strin.for
+
+fyobba.asm: fyobba.for
+
+fgetstr.asm: fgetstr.for
+
+farcs.obj: farcs.asm
+
+fattr.obj: fattr.asm
+
+faspect.obj: faspect.asm
+
+fbuffer.obj: fbuffer.asm
+
+fpref.obj: fpref.asm
+
+fclip.obj: fclip.asm
+
+fcurves.obj: fcurves.asm
+
+fdraw.obj: fdraw.asm
+
+fdrivers.obj: fdrivers.asm
+
+fgetgp.obj: fgetgp.asm
+
+fmatrix.obj: fmatrix.asm
+
+fmove.obj: fmove.asm
+
+fobjects.obj: fobjects.asm
+
+fpatches.obj: fpatches.asm
+
+fpoints.obj: fpoints.asm
+
+fpoly.obj: fpoly.asm
+
+frect.obj: frect.asm
+
+ftext.obj: ftext.asm
+
+ftrans.obj: ftrans.asm
+
+fviewing.obj: fviewing.asm
+
+fviewp.obj: fviewp.asm
+
+ft_strin.obj: ft_strin.asm
+
+fyobba.obj: fyobba.asm
+
+fgetstr.obj: fgetstr.asm
+
+fort.obj: fort.for
+	fl $(FFLAGS2) fort.for
+
+test.obj: test.c
+	cl $(CFLAGS) test.c
+
+fort.exe: fort.obj test.obj
+	link /NOE @link.in;

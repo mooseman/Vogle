@@ -1,0 +1,9 @@
+1)  Change FFLAGS in makefile.msc to set up what ever floating point stuff
+    you would like. (It appears that only -FPc or -FPI87 work - good onya
+    Microsoft!)
+
+2)  run make: "make makefile.msc"
+
+
+Note:- there is a set of tests, use "make make.msc" and run fort.exe
+to run them.

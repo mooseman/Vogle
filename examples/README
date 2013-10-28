@@ -1,0 +1,36 @@
+
+This directory contains example programs which may also be used in testing a
+new driver. If you are testing a new driver the trivial.{c,f} is of most
+use, followed by views.{c,f}, and then poly.{c,f}. When those three work, try
+the others. loc.{c,f} can be used for testing the mouse device if you have
+one.
+
+From the point of view of learning how to use VOGLE the suggested reading
+order is below.
+
+	C			FORTRAN
+
+	__________		__________
+
+	trivial.c		ftrivial.f
+	simple.c		fsimple.f
+	shapes.c		fshapes.f
+	poly.c			fpoly.f
+	views.c			fviews.f
+	distrt.c		fdistrt.f
+	circtxt.c		fcirctxt.f
+	moretxt.c		fmoretxt.f
+	getstr.c		fgetstr.f
+	curves.c		fcurves.f
+	patches.c		fpatches.f
+	balls.c			fballs.f
+	objvws.c		fobjvws.f
+	world.c			fworld.f
+	cube.c			fcube.f
+	tetra.c			ftetra.f
+	loc.c			floc.f
+	lcube.c			flcube.f
+
+
+teapot.c and showg.c is provided for the general interest.
+
