@@ -72,127 +72,12 @@ APOLLOLIBS =
 
 
 all:
-	@echo "Usage: 'make sun' or 'make X11' or 'make sun-X11' or 'make dec-X11' or 'make unix' or 'make apollo'"
+	@echo "Usage: 'make unix' "
 
 install:
 	cp src/$(LIB) $(DEST)
 	chmod 644 $(DEST)/$(LIB)
 	$(RANLIB) $(DEST)/$(LIB)
-
-sun:
-	cd src; make -f Makefile \
-			DEVICES="$(DEVICES) -DSUN" \
-			FONTLIB="$(FONTLIB)" \
-			MCFLAGS="$(MCFLAGS)" \
-			DOBJS="../drivers/sun.o"
-
-	cd examples; make -f Makefile \
-			MCFLAGS="$(MCFLAGS)" \
-			LIBS="$(SUNLIBS)"
-
-	if test -n "$(F77)" ; \
-	then cd examples; make -f Makefile.f77 \
-			LIBS="$(SUNLIBS)" \
-			MFFLAGS="$(MFFLAGS)" \
-			F77="$(F77)" ; \
-	fi ; exit 0
-
-	cd hershey/src; make -f Makefile \
-			FONTLIB="$(FONTLIB)" \
-			MCFLAGS="$(MCFLAGS)" \
-			LIBS="$(SUNLIBS)"
-
-X11:
-	cd src; make -f Makefile \
-			DEVICES="$(DEVICES) -DX11" \
-			FONTLIB="$(FONTLIB)" \
-			MCFLAGS="$(MCFLAGS)" \
-			DOBJS="../drivers/X11.o"
-
-	cd examples; make -f Makefile \
-			MCFLAGS="$(MCFLAGS)" \
-			LIBS="$(X11LIBS)"
-
-	if test -n "$(F77)" ; \
-	then cd examples; make -f Makefile.f77 \
-			LIBS="$(X11LIBS)" \
-			MFFLAGS="$(MFFLAGS)" \
-			F77="$(F77)" ; \
-	fi ; exit 0
-
-	cd hershey/src; make -f Makefile \
-			FONTLIB="$(FONTLIB)" \
-			MCFLAGS="$(MCFLAGS)" \
-			LIBS="$(X11LIBS)"
-
-sun-X11:
-	cd src; make -f Makefile \
-			DEVICES="$(DEVICES) -DX11 -DSUN" \
-			FONTLIB="$(FONTLIB)" \
-			MCFLAGS="$(MCFLAGS)" \
-			DOBJS="../drivers/X11.o ../drivers/sun.o"
-
-	cd examples; make -f Makefile \
-			MCFLAGS="$(MCFLAGS)" \
-			LIBS="$(X11LIBS) $(SUNLIBS)"
-
-	if test -n "$(F77)" ; \
-	then cd examples; make -f Makefile.f77 \
-			LIBS="$(X11LIBS) $(SUNLIBS)" \
-			MFFLAGS="$(MFFLAGS)" \
-			F77="$(F77)" ; \
-	fi ; exit 0
-
-	cd hershey/src; make -f Makefile \
-			FONTLIB="$(FONTLIB)" \
-			MCFLAGS="$(MCFLAGS)" \
-			LIBS="$(X11LIBS) $(SUNLIBS)"
-
-dec-X11:
-	cd src; make -f Makefile \
-			DEVICES="$(DEVICES) -DX11 -DDECX11" \
-			FONTLIB="$(FONTLIB)" \
-			MCFLAGS="$(MCFLAGS)" \
-			DOBJS="../drivers/X11.o ../drivers/decX11.o"
-
-	cd examples; make -f Makefile \
-			MCFLAGS="$(MCFLAGS)" \
-			LIBS="$(X11LIBS)"
-
-	if test -n "$(F77)" ; \
-	then cd examples; make -f Makefile.f77 \
-			LIBS="$(X11LIBS)" \
-			MFFLAGS="$(MFFLAGS)" \
-			F77="$(F77)" ; \
-	fi ; exit 0
-
-	cd hershey/src; make -f Makefile \
-			FONTLIB="$(FONTLIB)" \
-			MCFLAGS="$(MCFLAGS)" \
-			LIBS="$(X11LIBS)"
-
-apollo:
-	cd src; make -f Makefile \
-			DEVICES="$(DEVICES) -DAPOLLO" \
-			FONTLIB="$(FONTLIB)" \
-			MCFLAGS="$(MCFLAGS)" \
-			DOBJS="../drivers/apollo.o"
-
-	cd examples; make -f Makefile \
-			LIBS="$(APOLLOLIBS)" \
-			MCFLAGS="$(MCFLAGS)" 
-
-	if test -n "$(F77)" ; \
-	then cd examples; make -f Makefile.f77 \
-			MFFLAGS="$(MFFLAGS)" \
-			LIBS="$(APOLLOLIBS)" \
-			F77="$(F77)" ; \
-	fi ; exit 0
-
-	cd hershey/src; make -f Makefile \
-			FONTLIB="$(FONTLIB)" \
-			LIBS="$(APOLLOLIBS)" \
-			MCFLAGS="$(MCFLAGS)"
 
 unix:
 	cd src; make -f Makefile \
